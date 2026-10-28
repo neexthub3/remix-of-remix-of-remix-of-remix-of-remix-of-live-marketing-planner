@@ -26,7 +26,7 @@
 - Member routes use a separate scoped reference shell and client-hydrated PHP bearer session; private account queries run only after the server validates the session, so public pages and SSR contain no member financial data.
 - The member API base uses VITE_LIFEOS_API_URL with an external-host fallback; the optional relative development prefix still uses the Vite proxy.
 - PHP database initialization and signed migration requests share Migrations::apply; legacy dump initialization executes additive structure only to preserve existing accounts and avoid destructive resets.
-- Send external PHP updates with scripts/master-update.py; the HMAC key comes from LIFEOS_MASTER_KEY or the owner-editable root master-keys.json (never under public/ or imported by browser code), and MasterAuth accepts keys from config and that file.
+- The backend reads only its own backendserver/.env (overrides config.php); the app and scripts/master-update.py read the root .env (non-VITE vars never reach the browser). Never deploy backendserver/.env through the updater, so live database settings stay owner-controlled.
 - Package all database migrations automatically; scoped live updates must use the updater's explicit file selection so missing schema cannot silently break activation.
 - Enforce admin feature switches and withdrawal limits through PanelPolicy on the PHP API; browser controls reflect member-safe settings but never replace server validation.
 - Master file paths resolve through their canonical existing ancestor with normalized Windows separators; this permits missing XAMPP files without allowing traversal or symlink escapes.
