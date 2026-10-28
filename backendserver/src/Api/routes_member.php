@@ -368,3 +368,180 @@ $router->get('/api/member/tree/downline', function () {
     }
     Http::ok(['members' => $out]);
 });
+
+// ---- Wallet helpers: balance transfers and credit->debit exchange ----
+/** Both forms confirm with the login password and (when set) the transaction password. */
+function verifyTransferPasswords(int $uid, array $b): void
+{
+    $u = DB::one('SELECT pin_hash, transaction_password_hash FROM users WHERE id = ?', [$uid]);
+    if (!$u || !password_verify((string) ($b['login_password'] ?? ''), (string) $u['pin_hash'])) {
+        throw new HttpError('Login password is incorrect', 401);
+    }
+    $tp = (string) ($b['transaction_password'] ?? '');
+    $hash = $u['transaction_password_hash'] ?? null;
+    if ($hash !== null && $hash !== '') {
+        if ($tp === '' || !password_verify($tp, (string) $hash)) throw new HttpError('Transaction password is incorrect', 401);
+    } elseif ($tp === '') {
+        throw new HttpError('Transaction password is required');
+    }
+}
+
+function transferPolicy(): void
+{
+    if (!\LifeOS\PanelPolicy::enabled(DB::val("SELECT v FROM lo_settings WHERE k = 'transfer_status'"))) {
+        throw new HttpError('Balance transfers are currently disabled', 403);
+    }
+}
+
+$router->post('/api/member/transfer', function () {
+    transferPolicy();
+    $b = Http::body();
+    $kind = strtoupper((string) ($b['kind'] ?? 'DEBIT'));
+    if (!in_array($kind, ['DEBIT', 'CREDIT'], true)) throw new HttpError('Invalid transfer type');
+    $amount = round((float) ($b['amount'] ?? 0), 2);
+    if ($amount <= 0 || $amount > 99999999) throw new HttpError('Enter a valid amount');
+    $u = Auth::member();
+    $uid = (int) $u['id'];
+    verifyTransferPasswords($uid, $b);
+    $rec = DB::one("SELECT id FROM users WHERE life_id = ? AND status <> 'suspended'", [trim((string) ($b['receiver'] ?? ''))]);
+    if (!$rec) throw new HttpError('Receiver User ID not found', 404);
+    $rid = (int) $rec['id'];
+    if ($rid === $uid) throw new HttpError('You cannot transfer to your own account');
+
+    if ($kind === 'DEBIT') {
+        // Debit (withdrawable) balance lives in lo_ledger; both sides FOR UPDATE so two
+        // simultaneous requests cannot both spend the same balance.
+        DB::tx(function () use ($uid, $rid, $amount) {
+            DB::one('SELECT id FROM users WHERE id = ? FOR UPDATE', [$uid]);
+            DB::one('SELECT id FROM users WHERE id = ? FOR UPDATE', [$rid]);
+            if ($amount > round(\LifeOS\Engine\Wallet::available($uid), 2)) throw new HttpError('Insufficient debit balance', 409);
+            DB::insert('INSERT INTO lo_ledger (payout_code, user_id, ledger_type, amount, status, note) VALUES (?,?,?,?,?,?)',
+                ['TR-' . strtoupper(bin2hex(random_bytes(9))), $uid, 'TRANSFER', -$amount, 'PAID', 'Debit balance transfer out']);
+            DB::insert('INSERT INTO lo_ledger (payout_code, user_id, ledger_type, amount, status, note) VALUES (?,?,?,?,?,?)',
+                ['TR-' . strtoupper(bin2hex(random_bytes(9))), $rid, 'TRANSFER', $amount, 'PAID', 'Debit balance transfer in']);
+            $tid = DB::insert('INSERT INTO lo_transfers (kind, from_user, to_user, amount) VALUES (?, ?, ?, ?)', ['DEBIT', $uid, $rid, $amount]);
+            DB::insert('INSERT INTO wallet_transactions (user_id, type, amount, note, ref_id, category) VALUES (?, "debit", ?, ?, ?, "transfer")', [$uid, $amount, 'Debit balance transfer out', $tid]);
+            DB::insert('INSERT INTO wallet_transactions (user_id, type, amount, note, ref_id, category) VALUES (?, "credit", ?, ?, ?, "transfer")', [$rid, $amount, 'Debit balance transfer in', $tid]);
+            return $tid;
+        });
+    } else {
+        // Credit (service) balance lives in user_wallets.service_balance and never funds withdrawals.
+        DB::tx(function () use ($uid, $rid, $amount) {
+            $a = DB::one('SELECT user_id, service_balance FROM user_wallets WHERE user_id = ? FOR UPDATE', [$uid]);
+            $c = DB::one('SELECT user_id, service_balance FROM user_wallets WHERE user_id = ? FOR UPDATE', [$rid]);
+            if (!$a || !$c) throw new HttpError('Wallet record missing', 409);
+            if ($amount > (float) $a['service_balance']) throw new HttpError('Insufficient credit balance', 409);
+            DB::run('UPDATE user_wallets SET service_balance = service_balance - ? WHERE user_id = ?', [$amount, $uid]);
+            DB::run('UPDATE user_wallets SET service_balance = service_balance + ? WHERE user_id = ?', [$amount, $rid]);
+            $tid = DB::insert('INSERT INTO lo_transfers (kind, from_user, to_user, amount) VALUES (?, ?, ?, ?)', ['CREDIT', $uid, $rid, $amount]);
+            DB::insert('INSERT INTO wallet_transactions (user_id, type, amount, note, ref_id, category) VALUES (?, "debit", ?, ?, ?, "transfer")', [$uid, $amount, 'Credit balance transfer out', $tid]);
+            DB::insert('INSERT INTO wallet_transactions (user_id, type, amount, note, ref_id, category) VALUES (?, "credit", ?, ?, ?, "transfer")', [$rid, $amount, 'Credit balance transfer in', $tid]);
+            return $tid;
+        });
+    }
+    Http::ok(['ok' => true]);
+});
+
+$router->post('/api/member/exchange', function () {
+    transferPolicy();
+    $b = Http::body();
+    $amount = round((float) ($b['amount'] ?? 0), 2);
+    if ($amount <= 0 || $amount > 99999999) throw new HttpError('Enter a valid amount');
+    $u = Auth::member();
+    $uid = (int) $u['id'];
+    verifyTransferPasswords($uid, $b);
+    $pct = (float) (DB::val("SELECT v FROM lo_settings WHERE k = 'exchange_charge_pct'") ?: 0);
+    if ($pct < 0 || $pct > 100) $pct = 0;
+    $net = round($amount * (1 - $pct / 100), 2);
+    $charge = round($amount - $net, 2);
+    DB::tx(function () use ($uid, $amount, $net, $charge) {
+        $a = DB::one('SELECT user_id, service_balance FROM user_wallets WHERE user_id = ? FOR UPDATE', [$uid]);
+        if (!$a) throw new HttpError('Wallet record missing', 409);
+        if ($amount > (float) $a['service_balance']) throw new HttpError('Insufficient credit balance', 409);
+        DB::run('UPDATE user_wallets SET service_balance = service_balance - ? WHERE user_id = ?', [$amount, $uid]);
+        DB::insert('INSERT INTO lo_ledger (payout_code, user_id, ledger_type, amount, status, note) VALUES (?,?,?,?,?,?)',
+            ['EX-' . strtoupper(bin2hex(random_bytes(9))), $uid, 'TRANSFER', $net, 'PAID', 'Exchange from credit balance']);
+        $tid = DB::insert('INSERT INTO lo_transfers (kind, from_user, to_user, amount, charge) VALUES (?, ?, ?, ?, ?)', ['EXCHANGE', $uid, $uid, $net, $charge]);
+        DB::insert('INSERT INTO wallet_transactions (user_id, type, amount, note, ref_id, category) VALUES (?, "debit", ?, ?, ?, "exchange")', [$uid, $amount, 'Credit balance exchanged to debit', $tid]);
+        return $tid;
+    });
+    Http::ok(['amount' => $net, 'charge' => $charge]);
+});
+
+$router->get('/api/member/transfer-report', function () {
+    $u = Auth::member();
+    $uid = (int) $u['id'];
+    $kind = strtoupper((string) ($_GET['kind'] ?? 'DEBIT'));
+    if (!in_array($kind, ['DEBIT', 'CREDIT', 'EXCHANGE'], true)) throw new HttpError('Invalid report type');
+    $dir = ($_GET['dir'] ?? 'out') === 'in' ? 'in' : 'out';
+    $where = ['t.kind = ?'];
+    $p = [$kind];
+    if ($kind === 'EXCHANGE') {
+        $where[] = 't.from_user = ?';
+        $p[] = $uid;
+    } else {
+        $where[] = $dir === 'in' ? 't.to_user = ?' : 't.from_user = ?';
+        $p[] = $uid;
+    }
+    if (!empty($_GET['from'])) { $where[] = 't.created_at >= ?'; $p[] = $_GET['from'] . ' 00:00:00'; }
+    if (!empty($_GET['to'])) { $where[] = 't.created_at <= ?'; $p[] = $_GET['to'] . ' 23:59:59'; }
+    $partyCol = $kind === 'EXCHANGE' || $dir === 'out' ? 't.to_user' : 't.from_user';
+    $rows = DB::all(
+        "SELECT t.id, t.kind, t.amount, t.charge, t.created_at, x.life_id AS party_life_id, x.phone AS party_phone,
+            (SELECT pp.name FROM user_profiles pp WHERE pp.user_id = x.id ORDER BY pp.id DESC LIMIT 1) AS party_name
+         FROM lo_transfers t JOIN users x ON x.id = $partyCol
+         WHERE " . implode(' AND ', $where) . " ORDER BY t.id DESC LIMIT 500",
+        $p
+    );
+    Http::ok(['rows' => $rows, 'dir' => $dir]);
+});
+
+// ---- Blood group wise member list (own search; no financial data) ----
+$router->get('/api/member/blood', function () {
+    Auth::member();
+    $where = ["up.blood_group IS NOT NULL", "up.blood_group <> ''"];
+    $p = [];
+    $district = trim((string) ($_GET['district'] ?? ''));
+    $group = trim((string) ($_GET['group'] ?? ''));
+    if ($district !== '') { $where[] = 'up.district = ?'; $p[] = $district; }
+    if ($group !== '') { $where[] = 'up.blood_group = ?'; $p[] = $group; }
+    $donors = DB::all(
+        "SELECT u.id, u.life_id, u.phone, u.email, up.name, up.blood_group, up.district, up.post_code, up.address_current,
+            (up.photo_base64 IS NOT NULL AND up.photo_base64 <> '') AS has_photo
+         FROM users u
+         JOIN (SELECT user_id, MAX(id) AS pid FROM user_profiles GROUP BY user_id) pm ON pm.user_id = u.id
+         JOIN user_profiles up ON up.id = pm.pid
+         WHERE " . implode(' AND ', $where) . " ORDER BY u.id DESC LIMIT 500",
+        $p
+    );
+    $groups = array_column(DB::all("SELECT DISTINCT blood_group FROM user_profiles WHERE blood_group IS NOT NULL AND blood_group <> '' ORDER BY blood_group"), 'blood_group');
+    $districts = array_column(DB::all("SELECT DISTINCT district FROM user_profiles WHERE district IS NOT NULL AND district <> '' ORDER BY district"), 'district');
+    Http::ok(['donors' => $donors, 'groups' => $groups, 'districts' => $districts]);
+});
+
+// ---- Transaction PIN reset: the login password becomes the transaction PIN ----
+$router->post('/api/member/transaction-pin', function () {
+    $u = Auth::member();
+    $b = Http::body();
+    $row = DB::one('SELECT pin_hash FROM users WHERE id = ?', [(int) $u['id']]);
+    if (!$row || !password_verify((string) ($b['password'] ?? ''), (string) $row['pin_hash'])) {
+        throw new HttpError('Password is incorrect', 401);
+    }
+    DB::run('UPDATE users SET transaction_password_hash = ? WHERE id = ?', [password_hash((string) $b['password'], PASSWORD_DEFAULT), (int) $u['id']]);
+    Http::ok(['ok' => true]);
+});
+
+// ---- Products (plan based) and purchase report ----
+$router->get('/api/member/products', function () {
+    Auth::member();
+    Http::ok(DB::all('SELECT id, code, name, image, np_value, unit_price FROM lo_products WHERE is_active = 1 ORDER BY id'));
+});
+
+$router->get('/api/member/purchases', function () {
+    $u = Auth::member();
+    $sql = 'SELECT activation_code, fee, payment_status, created_at FROM lo_activations WHERE user_id = ?';
+    $p = [(int) $u['id']];
+    if (!empty($_GET['from'])) { $sql .= ' AND created_at >= ?'; $p[] = $_GET['from'] . ' 00:00:00'; }
+    if (!empty($_GET['to'])) { $sql .= ' AND created_at <= ?'; $p[] = $_GET['to'] . ' 23:59:59'; }
+    Http::ok(DB::all($sql . ' ORDER BY id DESC LIMIT 500', $p));
+});
