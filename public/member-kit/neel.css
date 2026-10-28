@@ -330,3 +330,10 @@
 .neel #main_member table th, .neel #main_member table td { font-family: Tahoma, Geneva, sans-serif; }
 .neel #main_member form > table:not(.table) { border: 1px solid #d5e0f0; border-radius: 8px; padding: 10px 14px; background: #fff; box-shadow: 0 4px 14px rgba(3,54,123,.08); }
 .neel #main_member table td, .neel #main_member table th { vertical-align: middle !important; }
+
+/* Reference polish: compact plain title, red empty notice, blue print icon */
+.neel .main_bg > #heading, .neel #heading { font-size: 17px !important; font-weight: normal !important; color: #333 !important; margin: 10px 0 10px 4px !important; padding-left: 12px !important; position: relative; }
+.neel .main_bg > #heading::before, .neel #heading::before { width: 3px !important; }
+.neel #main_member td.neel-norec { color: #e00000 !important; font-weight: bold; text-align: center; padding: 4px 0 !important; }
+.neel .print img { filter: hue-rotate(75deg) saturate(1.3); }
+.neel .nr-filter { margin: 0 0 4px !important; }

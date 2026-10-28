@@ -128,16 +128,16 @@ export function Page({ title, children, center }: { title: string; children: Rea
   );
 }
 
-export function DataTable({ head, rows, empty = "No records found", foot }: { head: string[]; rows: ReactNode[][]; empty?: string; foot?: ReactNode[] | undefined }) {
+export function DataTable({ head, rows, empty = "No record found.", foot }: { head: string[]; rows: ReactNode[][]; empty?: string; foot?: ReactNode[] | undefined }) {
   return (
     <div style={{ overflowX: "auto", WebkitOverflowScrolling: "touch" }}>
-    <table className="table" width="100%" cellPadding={0} cellSpacing={0} style={{ marginTop: 20 }}>
+    <table className="table" width="100%" cellPadding={0} cellSpacing={0} style={{ marginTop: 8 }}>
       <thead>
         <tr>{head.map((h) => <th key={h}>{h}</th>)}</tr>
       </thead>
       <tbody>
         {rows.length === 0 ? (
-          <tr><td colSpan={head.length}>{empty}</td></tr>
+          <tr><td colSpan={head.length} className="neel-norec">{empty}</td></tr>
         ) : (
           rows.map((r, i) => <tr key={i}>{r.map((c, j) => <td key={j}>{c}</td>)}</tr>)
         )}
