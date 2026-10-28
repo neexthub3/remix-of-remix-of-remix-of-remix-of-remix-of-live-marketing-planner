@@ -10,8 +10,8 @@ function AccountNotice() {
   const q = useMember<{ id: number; kind: string; title: string | null; content: string; updated_at: string }[]>("notices", "/notices");
   return <Page title="Account Notice">
     <Msg text={q.error ? (q.error as Error).message : null} />
-    {q.isPending ? <p>Loading…</p> : !q.error && !q.data?.length ? <p>No current notices.</p> : null}
-    {q.data?.map((n) => <article key={n.id} className="border-b border-border py-4">
+    {q.isPending ? <p className="neel-empty">Loading…</p> : !q.error && !q.data?.length ? <p className="neel-empty">No current notices.</p> : null}
+    {q.data?.map((n) => <article key={n.id}>
       <h3>{n.title || (n.kind === "SCROLL" ? "Latest News" : "Notice")}</h3>
       <p className="whitespace-pre-wrap break-words">{n.content}</p>
       <time className="text-sm text-muted-foreground">{fmtDate(n.updated_at)}</time>
