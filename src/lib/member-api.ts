@@ -19,7 +19,7 @@ const LEGACY_DEMO_TOKEN = "demo";
 
 export async function memberApi<T = unknown>(path: string, init: { method?: string; body?: unknown } = {}): Promise<T> {
   let token = memberToken.get();
-  if (token === LEGACY_DEMO_TOKEN) { memberToken.clear?.(); token = null; }
+  if (token === LEGACY_DEMO_TOKEN) { memberToken.clear(); token = null; }
   const res = await fetch(`${BASE}/member${path}`, {
     method: init.method ?? (init.body ? "POST" : "GET"),
     headers: {
