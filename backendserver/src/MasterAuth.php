@@ -24,11 +24,27 @@ final class MasterAuth
             throw new HttpError('Invalid signature', 401);
         }
         $base = "$ts.$method.$path." . hash('sha256', Http::rawBody());
-        $expect = hash_hmac('sha256', $base, (string) Config::get('master_key'));
-        if (!hash_equals($expect, $sig)) {
+        $ok = false;
+        foreach (self::keys() as $key) {
+            if (hash_equals(hash_hmac('sha256', $base, $key), $sig)) { $ok = true; }
+        }
+        if (!$ok) {
             self::audit('auth', $path, false, 'bad signature');
             throw new HttpError('Invalid signature', 401);
         }
+    }
+
+    /** All accepted keys: config master_key, config master_keys, and master-keys.json beside backendserver/. */
+    public static function keys(): array
+    {
+        $keys = array_merge([(string) Config::get('master_key', '')], (array) Config::get('master_keys', []));
+        foreach ([dirname(__DIR__, 2) . '/master-keys.json', dirname(__DIR__) . '/storage/master-keys.json'] as $file) {
+            if (is_file($file)) {
+                $data = json_decode((string) file_get_contents($file), true);
+                $keys = array_merge($keys, array_values((array) ($data['keys'] ?? [])));
+            }
+        }
+        return array_values(array_filter(array_unique(array_map('strval', $keys)), fn($k) => strlen($k) >= 16));
     }
 
     public static function audit(string $action, ?string $target, bool $ok, ?string $detail = null): void
