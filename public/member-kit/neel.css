@@ -200,3 +200,6 @@
 .neel .nl-form a { font-size: 8px; margin-left: 8px; }
 .neel .nl-eye { background: none; border: 0; cursor: pointer; padding: 0; vertical-align: middle; color: #555; }
 .neel .nl-link { background: none; border: 0; color: var(--lo-blue); text-decoration: underline; font-size: 8px; cursor: pointer; padding: 0; margin-top: 4px; }
+.neel .nl-form table { width: auto; margin: 0 auto; }
+.neel .nl-form td:first-child { width: 85px !important; }
+.neel .nl-form td { white-space: nowrap; }
