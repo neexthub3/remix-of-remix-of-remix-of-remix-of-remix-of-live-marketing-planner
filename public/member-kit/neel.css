@@ -173,3 +173,30 @@
 .neel #main_member form table:not(.np-t) { width: auto !important; }
 .neel #main_member form table:not(.np-t) td:first-child { width: 135px !important; }
 .neel #main_member form table:not(.np-t) td:nth-child(2) { width: 14px !important; }
+
+/* Public frame (login / register) */
+.neel .neel-nav-public > ul { list-style: none; margin: 0; padding: 0 0 0 10px; display: flex; height: 37px; }
+.neel .neel-nav-public a { display: block; line-height: 37px; padding: 0 13px; color: #fff; font-size: 12.5px; text-decoration: none; }
+.neel .neel-nav-public a:hover { background: var(--lo-green); }
+.neel .nj-form table, .neel .nl-form table { border-collapse: collapse; }
+.neel .nj-form td, .neel .nl-form td { font-size: 8.5px; padding: 0 0 4px; vertical-align: middle; }
+.neel .nj-form td:first-child { width: 135px; } .neel .nj-form td:nth-child(2), .neel .nl-form td:nth-child(2) { width: 14px; }
+.neel .nj-form input:not([type="radio"]):not([type="checkbox"]):not([type="file"]), .neel .nj-form select,
+.neel .nl-form input[type="text"], .neel .nl-form input[type="password"] { width: 131px; height: 13px; font-size: 8px; padding: 0 3px; }
+.neel .nj-form textarea { width: 131px; height: 45px; font-size: 8px; }
+.neel .nj-form input[type="file"] { border: 0; height: auto; padding: 0; font-size: 8px; }
+.neel .nj-form input[readonly] { background: #eef4fb; }
+.neel .nj-form button, .neel .nl-form button[type="submit"] { font-size: 8px; padding: 1px 5px; background: #f2f2f2; border: 1px solid #8f8f8f; border-radius: 2px; cursor: pointer; }
+.neel .nj-req { color: #d00; }
+.neel .nj-team { border: 0; padding: 0; margin: 0; display: flex; gap: 18px; font-size: 8.5px; }
+.neel .nj-terms { font-size: 8.5px; }
+.neel .nj-err { color: #c00; font-size: 9px; font-weight: bold; margin: 4px 0; }
+.neel .nj-sponsor { font-size: 9px; margin: 0 0 8px 2px; color: var(--lo-blue); }
+.neel .nj-photo { display: block; width: 60px; height: 70px; object-fit: cover; margin-top: 3px; border: 1px solid var(--lo-blue); }
+.neel .nl-box { width: 330px; margin: 30px auto 60px; border: 3px solid var(--lo-blue); }
+.neel .nl-h { background: var(--lo-blue); color: #fff; text-align: center; font-weight: bold; font-size: 10px; padding: 5px 0; }
+.neel .nl-form { padding: 14px 12px 10px; }
+.neel .nl-form td:first-child { width: 95px; }
+.neel .nl-form a { font-size: 8px; margin-left: 8px; }
+.neel .nl-eye { background: none; border: 0; cursor: pointer; padding: 0; vertical-align: middle; color: #555; }
+.neel .nl-link { background: none; border: 0; color: var(--lo-blue); text-decoration: underline; font-size: 8px; cursor: pointer; padding: 0; margin-top: 4px; }

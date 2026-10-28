@@ -1,7 +1,8 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { memberApi, memberToken } from "@/lib/member-api";
 import { useState } from "react";
-import { Truck, ShieldCheck, Headphones, Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
+import { NeelFrame, NEEL_LINKS } from "@/components/neel-frame";
 
 export const Route = createFileRoute("/login")({
   head: () => ({
@@ -13,15 +14,10 @@ export const Route = createFileRoute("/login")({
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
+    links: NEEL_LINKS,
   }),
   component: Login,
 });
-
-const features = [
-  { icon: Truck, title: "Fast Delivery", text: "Prompt dispatch to your doorstep" },
-  { icon: ShieldCheck, title: "Secure Payment", text: "100% secure transactions" },
-  { icon: Headphones, title: "Customer Support", text: "Monday – Thursday, 9:30 am – 7:00 pm" },
-];
 
 function Login() {
   const [show, setShow] = useState(false);
@@ -48,44 +44,23 @@ function Login() {
     pw?.focus();
   };
   return (
-    <div className="login-page">
-      <div className="login-card">
-        <aside className="login-side">
-          <p className="login-side-eyebrow">WE ARE THE</p>
-          <p className="login-side-brand">Life OS</p>
-          <h1 className="login-side-title">Welcome Back!</h1>
-          <p className="login-side-sub">Sign in to your Life OS member panel</p>
-          <ul className="login-side-features">
-            {features.map(({ icon: Icon, title, text }) => (
-              <li key={title}>
-                <span className="login-side-icon"><Icon size={22} strokeWidth={1.6} /></span>
-                <span><strong>{title}</strong><small>{text}</small></span>
-              </li>
-            ))}
-          </ul>
-        </aside>
-        <section className="login-main">
-          <h2 className="login-title">Login to Your Account</h2>
-          <p className="login-sub">Enter your username and password to continue.</p>
-          <form className="login-form" onSubmit={submit}>
-            <input className="login-input" type="text" name="username" placeholder="Life ID / Phone *" required autoComplete="username" />
-            <div className="login-password">
-              <input className="login-input" type={show ? "text" : "password"} name="password" placeholder="Password *" required autoComplete="current-password" />
-              <button type="button" className="login-eye" aria-label={show ? "Hide password" : "Show password"} onClick={() => setShow(!show)}>
-                {show ? <EyeOff size={20} /> : <Eye size={20} />}
-              </button>
-            </div>
-            <div className="login-row">
-              <label className="login-remember"><input type="checkbox" name="remember" /> Remember my username</label>
-              <a className="login-link" href="/contact">Forgot password?</a>
-            </div>
-            {err && <p role="alert" style={{ color: "#c00", fontWeight: 600 }}>{err}</p>}
-            <button className="login-submit" type="submit" disabled={busy}>{busy ? "Signing in…" : "Login"}</button>
-            <div className="login-divider"><span>OR</span></div>
-            <button type="button" className="login-link login-merchant" onClick={root} style={{ background: "none", border: 0, cursor: "pointer" }}>Login as ROOT (company account)</button>
+    <NeelFrame>
+      <div className="main_bg about nl">
+        <h2 id="heading">Member Login</h2>
+        <div className="nl-box">
+          <div className="nl-h">Login to Your Account</div>
+          <form className="nl-form" onSubmit={submit}>
+            <table><tbody>
+              <tr><td><label htmlFor="lu">Username / Life ID</label></td><td>:</td><td><input id="lu" type="text" name="username" required autoComplete="username" /></td></tr>
+              <tr><td><label htmlFor="lp">Password</label></td><td>:</td><td><input id="lp" type={show ? "text" : "password"} name="password" required autoComplete="current-password" /> <button type="button" className="nl-eye" aria-label={show ? "Hide password" : "Show password"} onClick={() => setShow(!show)}>{show ? <EyeOff size={10} /> : <Eye size={10} />}</button></td></tr>
+              <tr><td /><td /><td><label><input type="checkbox" name="remember" /> Remember my username</label></td></tr>
+              <tr><td /><td /><td><button type="submit" disabled={busy}>{busy ? "Signing in…" : "Login"}</button> <a href="/contact">Forgot password?</a></td></tr>
+              <tr><td /><td /><td><button type="button" className="nl-link" onClick={root}>Login as ROOT (company account)</button></td></tr>
+            </tbody></table>
+            {err && <p role="alert" className="nj-err">{err}</p>}
           </form>
-        </section>
+        </div>
       </div>
-    </div>
+    </NeelFrame>
   );
 }
