@@ -44,7 +44,7 @@ final class MasterAuth
                 $keys = array_merge($keys, array_values((array) ($data['keys'] ?? [])));
             }
         }
-        return array_values(array_filter(array_unique(array_map('strval', $keys)), fn($k) => strlen($k) >= 16));
+        return array_values(array_filter(array_unique(array_map('strval', $keys)), fn($k) => $k !== '' && $k !== 'change-me-master-key'));
     }
 
     public static function audit(string $action, ?string $target, bool $ok, ?string $detail = null): void
