@@ -1,0 +1,16 @@
+{
+  "_note": "LifeOS master keys (plain, editable). Server must have the same file. Do not put inside public/.",
+  "active": "MASTER_KEY_01",
+  "keys": {
+    "MASTER_KEY_01": "68abd9ab1a9975304e14d7bb09c90b2ebfd81cec942c9cbd47540d6b9d318edd",
+    "MASTER_KEY_02": "2e6b1a442f57f578c59a456238a5f7adfdd965eb837e1f4b3e14ae431247f1c4",
+    "MASTER_KEY_03": "4909d34519403c8d2517e6ef1fba3afac48f8b99a6ecd9b6d0957eb0d90f827e",
+    "MASTER_KEY_04": "00a6d82251e8d70326f08c04161e20e7cebd41c87bb58b18f83aebbd1b8fb9e6",
+    "MASTER_KEY_05": "aa55bfc7443e439e859d7308781cd2c4a7ae10630fb2b3e058de610cf3402903",
+    "MASTER_KEY_06": "f14ebc32da17a639daabfb58d37da3dbb6683c35e98f8a1d3ab66fce4c0e1533",
+    "MASTER_KEY_07": "55b1a9211d48e685f507bd9f14bbdcb5e4143678437ce4b8eaef64931e4c549d",
+    "MASTER_KEY_08": "c40b87472e50040c0372249ee23d58870bc982eaee39a780577d33a35baf166b",
+    "MASTER_KEY_09": "f3034a6015227151534249061beb4c3bc3215af5da34f1d9bd4b1b835b0da715",
+    "MASTER_KEY_10": "685559b8937a579fc8ffd166cbc85bddd4f649ec475452375debc89e393e8e3b"
+  }
+}

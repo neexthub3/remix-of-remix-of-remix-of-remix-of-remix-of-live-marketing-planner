@@ -17,8 +17,17 @@ FILES = ["src/Migrations.php", "src/bootstrap.php", "src/Auth.php", "src/PanelPo
 FILES += [str(path.relative_to(ROOT)) for path in sorted((ROOT / "database").glob("*.sql"))]
 
 
+def file_key():
+    path = Path(__file__).resolve().parents[1] / "master-keys.json"
+    if not path.is_file():
+        return None
+    data = json.loads(path.read_text())
+    name = os.environ.get("LIFEOS_MASTER_KEY_NAME") or data.get("active")
+    return data.get("keys", {}).get(name)
+
+
 def request(method, path, payload=None):
-    key = os.environ.get("LIFEOS_MASTER_KEY")
+    key = os.environ.get("LIFEOS_MASTER_KEY") or file_key()
     if not key:
         raise RuntimeError("LIFEOS_MASTER_KEY is not configured")
     body = json.dumps(payload, separators=(",", ":")).encode() if payload is not None else b""
