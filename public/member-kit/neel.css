@@ -1,0 +1,114 @@
+/* Life OS member panel — reference (neelnod) layout in Life OS logo colours.
+   Primary = logo "L" blue, secondary = logo "O" green. Canvas is 750px, scaled as a whole. */
+:root {
+  --lo-blue: #065aaf;
+  --lo-blue-deep: #03367b;
+  --lo-green: #5ca50d;
+  --lo-lime: #c7dc21;
+  --lo-mix: linear-gradient(90deg, #03367b 0%, #065aaf 45%, #5ca50d 100%);
+}
+.neel-viewport { background: url(neel/back.jpg) repeat #26968f; min-height: 100vh; padding: 0; overflow-x: hidden; }
+.lifeos-member.neel { width: 750px; margin: 0 auto; padding-top: 4px; font-family: Tahoma, Geneva, sans-serif; font-size: 11px; line-height: 1.35; color: #000; background: none; min-height: 0; }
+.lifeos-member.neel * { box-sizing: border-box; }
+
+/* Header */
+.neel .neel-header { background: #fff; height: 113px; box-shadow: 0 0 6px rgba(0,0,0,.35); }
+.neel .neel-header-inner { display: flex; align-items: center; justify-content: center; height: 113px; gap: 0; text-decoration: none; }
+.neel .neel-mark { height: 86px; width: auto; margin-right: 24px; }
+.neel .neel-sep { width: 1px; height: 98px; background: #c9c9c9; display: inline-block; }
+.neel .neel-word { height: 62px; width: auto; margin: 0 28px; }
+.neel .neel-cart { color: #9a9a9a; margin-left: 22px; display: inline-flex; position: relative; }
+.neel .neel-cart svg circle { color: #d23a3a; stroke: #d23a3a; fill: #d23a3a; }
+
+/* Menu */
+.neel .neel-nav { background: var(--lo-blue); height: 37px; width: 750px; position: relative; z-index: 50; box-shadow: 0 0 6px rgba(0,0,0,.35); }
+.neel .neel-nav > ul { list-style: none; margin: 0; padding: 0 0 0 10px; display: flex; height: 37px; }
+.neel .neel-nav > ul > li { position: relative; }
+.neel .neel-nav > ul > li > a { display: block; line-height: 37px; padding: 0 13px; color: #fff; font-size: 12.5px; font-family: Tahoma, Geneva, sans-serif; text-decoration: none; background: none; border: 0; }
+.neel .neel-nav > ul > li > a:hover { background: var(--lo-green); color: #fff; }
+.neel .neel-nav ul ul { position: absolute; top: 37px; left: 0; min-width: 190px; list-style: none; margin: 0; padding: 0; background: var(--lo-blue-deep); box-shadow: 0 4px 8px rgba(0,0,0,.3); }
+.neel .neel-nav ul ul li a { display: block; padding: 7px 12px; color: #fff; font-size: 11.5px; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,.12); background: none; }
+.neel .neel-nav ul ul li a:hover { background: var(--lo-green); }
+
+/* Content */
+.neel .neel-main { background: #fff; padding: 2px 11px 6px; min-height: 380px; box-shadow: 0 0 6px rgba(0,0,0,.35); }
+.neel #main_member { min-height: 280px; }
+.neel .main_bg, .neel .main_bg.about { background: none; padding: 0 0 10px; width: auto; margin: 0; border: 0; }
+.neel .main_bg > #heading, .neel #heading { font-family: Tahoma, Geneva, sans-serif; font-size: 18px; font-weight: normal; color: #333; margin: 12px 0 16px 8px; text-align: left; padding: 0; background: none; border: 0; }
+.neel h4 { font-size: 13px; font-weight: normal; color: #333; margin: 6px 0 8px; }
+.neel h4 u { text-decoration: none; }
+.neel a { color: var(--lo-blue); }
+.neel hr { border: 0; border-top: 1px solid #9a9a9a; margin: 6px 0; }
+
+/* Forms (label : input rows) */
+.neel input, .neel select, .neel textarea { font-family: Tahoma, Geneva, sans-serif; font-size: 11px; border: 1px solid #a9a9a9; border-radius: 0; padding: 1px 4px; height: 16px; background: #fff; color: #000; }
+.neel select { height: 17px; padding: 0 2px; }
+.neel textarea { height: 50px; }
+.neel input[type="radio"], .neel input[type="checkbox"] { height: auto; vertical-align: middle; }
+.neel input[type="submit"], .neel button[type="submit"], .neel .neel-btn { background: #f2f2f2; border: 1px solid #8f8f8f; border-radius: 2px; padding: 1px 4px; height: auto; font-size: 10.5px; color: #000; cursor: pointer; font-weight: normal; }
+.neel input[type="submit"]:hover, .neel button[type="submit"]:hover { background: #e5e5e5; }
+.neel .neel-pill { background: var(--lo-blue); color: #fff; border: 0; border-radius: 5px; padding: 6px 13px; font-size: 11px; }
+.neel form table td, .neel form table th { padding: 2px 3px; font-weight: normal; text-align: left; background: none; border: 0; color: #000; vertical-align: middle; }
+
+/* Report tables */
+.neel .table { border: 4px solid var(--lo-blue); border-top: 0; border-collapse: collapse; margin-top: 8px !important; width: 100%; }
+.neel .table thead th, .neel .table tfoot th, .neel .table tbody th { background: var(--lo-blue); color: #fff; font-size: 10px; font-weight: bold; padding: 4px 3px; border: 0; text-align: center; }
+.neel .table td { background: #fff; border: 1px solid var(--lo-blue); padding: 3px 4px; font-size: 10px; text-align: center; }
+.neel .table tfoot td, .neel .table tr.total td { background: var(--lo-blue); color: #fff; font-weight: bold; text-align: right; border: 0; }
+
+/* Print + user id + footer */
+.neel .print { text-align: right; padding: 18px 6px 4px; }
+.neel .print img { width: 26px; cursor: pointer; filter: hue-rotate(0deg); }
+.neel .my-userid { text-align: right; font-size: 13px; padding: 0 6px 10px; color: #000; }
+.neel .neel-footer { background: var(--lo-mix); color: #fff; height: 41px; line-height: 41px; text-align: right; padding-right: 15px; font-size: 9px; box-shadow: 0 0 6px rgba(0,0,0,.35); margin-bottom: 20px; }
+
+/* Dashboard */
+.neel .nd-grid { display: grid; grid-template-columns: 325px 1fr; gap: 0 60px; padding: 0 0 0 16px; }
+.neel .nd-title { font-size: 13px; color: #333; margin: 2px 0 12px; }
+.neel .nd-st { width: 300px; border-collapse: collapse; }
+.neel .nd-st td { padding: 0 0 7px; font-size: 10.5px; }
+.neel .nd-st td.r { text-align: right; }
+.neel .nd-st tr.sum td { font-weight: bold; text-align: right; padding-right: 0; }
+.neel .nd-st tr.sum td:first-child { padding-right: 30px; }
+.neel .nd-st tr.cur td { font-weight: bold; font-size: 11px; text-align: right; }
+.neel .nd-st tr.line td { padding: 4px 0 11px; }
+.neel .nd-st tr.line td hr { margin: 0; }
+.neel .nd-right { padding-top: 0; }
+.neel .nd-photo { width: 166px; height: 166px; border: 1px solid var(--lo-blue); display: block; margin: 0 0 0 86px; padding: 3px; }
+.neel .nd-photo img { width: 100%; height: 100%; object-fit: cover; }
+.neel .nd-info { margin: 14px 0 0 3px; border-collapse: collapse; }
+.neel .nd-info td { font-size: 9px; padding: 0 0 4.5px; vertical-align: top; }
+.neel .nd-info td:first-child { width: 115px; }
+.neel .nd-info td:nth-child(2) { width: 9px; }
+.neel .nd-box { width: 256px; height: 72px; margin: 22px 0 0 0; background: var(--lo-blue); color: #fff; text-align: center; padding-top: 10px; }
+.neel .nd-box + .nd-box { margin-top: 27px; }
+.neel .nd-box .k { font-size: 17px; letter-spacing: .2px; }
+.neel .nd-box .v { font-family: Georgia, "Times New Roman", serif; font-size: 17px; font-weight: bold; color: var(--lo-lime); margin-top: 6px; }
+.neel .nd-share { margin: 48px 0 0 0; background: var(--lo-mix); color: #fff; text-align: center; padding: 7px 8px 9px; }
+.neel .nd-share .t { font-size: 12.5px; }
+.neel .nd-share .links { display: flex; flex-direction: column; gap: 4px; margin-top: 4px; }
+.neel .nd-share .link { font-size: 15px; color: #fff; text-decoration: none; word-break: break-all; }
+.neel .nd-share .link small { font-size: 10px; color: var(--lo-lime); margin-right: 6px; }
+.neel .nd-share button { font-size: 9.5px; margin-left: 6px; background: rgba(255,255,255,.15); color: #fff; border: 1px solid rgba(255,255,255,.6); border-radius: 2px; padding: 0 5px; cursor: pointer; vertical-align: middle; }
+.neel .nd-msg { margin: 30px 0 0; border: 3px solid var(--lo-blue); border-top: 0; }
+.neel .nd-msg .h { background: var(--lo-blue); color: #fff; font-weight: bold; font-size: 9.5px; text-align: center; padding: 3px 0 4px; }
+.neel .nd-msg .b { margin: 0; border: 3px solid var(--lo-blue); border-bottom: 0; border-left: 0; border-right: 0; padding: 0; }
+.neel .nd-msg .c { min-height: 46px; padding: 14px 10px; text-align: center; font-size: 9px; border: 1px solid #fff; }
+
+/* Genealogy tree */
+.neel .nt-wrap { text-align: center; }
+.neel .nt-node { display: inline-flex; flex-direction: column; align-items: center; text-decoration: none; }
+.neel .nt-node img { display: block; }
+.neel .nt-node span { font-size: 9px; color: var(--lo-blue); margin-top: 2px; }
+.neel .nt-node.empty span { color: var(--lo-blue); }
+
+/* Captcha-style security code */
+.neel .neel-captcha { display: inline-block; background: var(--lo-blue); color: #fff; font-family: Georgia, serif; font-size: 17px; letter-spacing: 13px; padding: 1px 6px 1px 18px; border-radius: 3px; font-style: italic; }
+
+/* Override older reference-kit pieces still in markup */
+.neel .profile_images { border: 0; padding: 0; }
+.neel .profile_images table th { background: var(--lo-blue); color: #fff; }
+.neel .profile_images table th, .neel .profile_images table td { border: 1px solid var(--lo-blue); }
+.neel .tree-node .avatar { border-color: var(--lo-blue); color: var(--lo-blue); background: #eaf2fb; }
+.neel .anchor_button { background: var(--lo-blue); }
+.neel #message { font-size: 11px; }
