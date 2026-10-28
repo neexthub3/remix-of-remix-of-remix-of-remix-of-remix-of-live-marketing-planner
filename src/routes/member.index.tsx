@@ -1,7 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Copy, ExternalLink } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { referralJoinUrl, type JoinTeam } from "@/lib/join-fields";
 import { Page, useMember } from "@/components/member-kit";
 import { bdt, LEDGER_LABELS } from "@/lib/member-api";
