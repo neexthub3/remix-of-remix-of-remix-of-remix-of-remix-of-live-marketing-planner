@@ -34,11 +34,11 @@ final class MasterAuth
         }
     }
 
-    /** All accepted keys: config master_key, config master_keys, and master-keys.json beside backendserver/. */
+    /** All accepted keys: config master_key, config master_keys, and backendserver/master-keys.json. */
     public static function keys(): array
     {
         $keys = array_merge([(string) Config::get('master_key', '')], (array) Config::get('master_keys', []));
-        foreach ([dirname(__DIR__, 2) . '/master-keys.json', dirname(__DIR__) . '/storage/master-keys.json'] as $file) {
+        foreach ([dirname(__DIR__) . '/master-keys.json', dirname(__DIR__) . '/storage/master-keys.json'] as $file) {
             if (is_file($file)) {
                 $data = json_decode((string) file_get_contents($file), true);
                 $keys = array_merge($keys, array_values((array) ($data['keys'] ?? [])));
