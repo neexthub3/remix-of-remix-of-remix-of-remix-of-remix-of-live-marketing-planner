@@ -148,3 +148,6 @@
 .neel .nt-join::before, .neel .nt-join::after { content: ""; position: absolute; bottom: -3px; width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 7px solid var(--lo-blue-deep); }
 .neel .nt-join::before { left: -6.5px; } .neel .nt-join::after { right: -6.5px; }
 .neel .nt-kids { display: flex; width: 100%; }
+.neel .np-grid > table { align-self: start; }
+.neel .np-r td { padding-bottom: 6px; }
+.neel .nt-join { margin-top: 22px; }
