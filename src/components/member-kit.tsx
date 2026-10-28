@@ -128,7 +128,7 @@ export function Page({ title, children, center }: { title: string; children: Rea
   );
 }
 
-export function DataTable({ head, rows, empty = "No records found" }: { head: string[]; rows: ReactNode[][]; empty?: string }) {
+export function DataTable({ head, rows, empty = "No records found", foot }: { head: string[]; rows: ReactNode[][]; empty?: string; foot?: ReactNode[] }) {
   return (
     <div style={{ overflowX: "auto", WebkitOverflowScrolling: "touch" }}>
     <table className="table" width="100%" cellPadding={0} cellSpacing={0} style={{ marginTop: 20 }}>
@@ -142,6 +142,7 @@ export function DataTable({ head, rows, empty = "No records found" }: { head: st
           rows.map((r, i) => <tr key={i}>{r.map((c, j) => <td key={j}>{c}</td>)}</tr>)
         )}
       </tbody>
+      {foot && <tfoot><tr className="total">{foot.map((c, j) => <td key={j}>{c}</td>)}</tr></tfoot>}
     </table>
     </div>
   );
