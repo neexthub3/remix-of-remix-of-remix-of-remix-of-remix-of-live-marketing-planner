@@ -329,3 +329,42 @@ $router->get('/api/member/notices', function () {
     \LifeOS\Http::ok(\LifeOS\DB::all("SELECT id, kind, title, content, show_from, show_to, updated_at FROM lo_notices
         WHERE is_visible = 1 AND (show_from IS NULL OR show_from <= CURDATE()) AND (show_to IS NULL OR show_to >= CURDATE()) ORDER BY id DESC LIMIT 50"));
 });
+
+// ---- Referral levels (sponsor generations) and placement downline list; own subtree only ----
+$router->get('/api/member/tree/levels', function () {
+    $u = Auth::member();
+    $start = max(1, min(10, (int) ($_GET['start'] ?? 1)));
+    $end = max($start, min(10, (int) ($_GET['end'] ?? 3)));
+    $levels = [];
+    $ids = [(int) $u['id']];
+    for ($lv = 1; $lv <= $end && $ids; $lv++) {
+        $in = implode(',', array_map('intval', $ids));
+        $rows = DB::all(
+            "SELECT u.id, u.life_id, u.created_at, t.is_active, s.life_id AS sponsor_life_id,
+                    (SELECT p.name FROM user_profiles p WHERE p.user_id = u.id ORDER BY p.id DESC LIMIT 1) AS name
+             FROM lo_tree t JOIN users u ON u.id = t.user_id LEFT JOIN users s ON s.id = t.sponsor_id
+             WHERE t.sponsor_id IN ($in) ORDER BY u.id"
+        );
+        if ($lv >= $start) $levels[] = ['level' => $lv, 'members' => $rows];
+        $ids = array_map(fn($r) => (int) $r['id'], $rows);
+    }
+    Http::ok(['levels' => $levels]);
+});
+
+$router->get('/api/member/tree/downline', function () {
+    $u = Auth::member();
+    $out = [];
+    $queue = [(int) $u['id']];
+    while ($queue && count($out) < 500) {
+        $in = implode(',', array_map('intval', $queue));
+        $rows = DB::all(
+            "SELECT u.id, u.life_id, u.created_at, t.is_active, t.placement_side, s.life_id AS sponsor_life_id, pp.life_id AS placement_life_id
+             FROM lo_tree t JOIN users u ON u.id = t.user_id
+             LEFT JOIN users s ON s.id = t.sponsor_id LEFT JOIN users pp ON pp.id = t.placement_parent_id
+             WHERE t.placement_parent_id IN ($in) ORDER BY u.id"
+        );
+        foreach ($rows as $r) $out[] = $r;
+        $queue = array_map(fn($r) => (int) $r['id'], $rows);
+    }
+    Http::ok(['members' => $out]);
+});
