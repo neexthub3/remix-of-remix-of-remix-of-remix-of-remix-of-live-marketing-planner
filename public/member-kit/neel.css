@@ -207,3 +207,63 @@
 .lifeos-member.neel #menu.neel-nav ul ul > span { display: none !important; }
 .lifeos-member.neel #menu.neel-nav ul ul li a { width: auto !important; height: auto !important; line-height: 1.4 !important; padding: 7px 12px !important; color: #fff !important; font-size: 11.5px !important; margin: 0 !important; }
 .lifeos-member.neel #menu.neel-nav ul ul li a:hover { background: var(--lo-green) !important; }
+
+/* ===== Premium login / register ===== */
+.neel .nl, .neel .nj { padding-bottom: 30px; }
+.neel .nl #heading, .neel .nj #heading { display: none; }
+.neel .nl-box, .neel .nj-form { background: #fff; border: 0; border-radius: 12px; box-shadow: 0 14px 34px -12px rgba(3,54,123,.35), 0 0 0 1px rgba(6,90,175,.12); overflow: hidden; }
+.neel .nl-box { width: 360px; margin: 34px auto 40px; }
+.neel .nl-h, .neel .nj::before { background: var(--lo-mix); color: #fff; }
+.neel .nl-h { font-size: 13px; letter-spacing: .3px; padding: 16px 0 14px; position: relative; }
+.neel .nl-h::after { content: "Welcome back to your Life OS member panel"; display: block; font-weight: normal; font-size: 8.5px; color: var(--lo-lime); margin-top: 3px; }
+.neel .nl-form { padding: 18px 20px 16px; }
+.neel .nl-form table, .neel .nl-form tbody, .neel .nl-form tr { display: block; }
+.neel .nl-form td { display: block; width: auto !important; padding: 0 !important; }
+.neel .nl-form td:nth-child(2), .neel .nl-form td:empty { display: none; }
+.neel .nl-form tr { margin-bottom: 9px; }
+.neel .nl-form td:first-child label { font-size: 8.5px; font-weight: bold; color: var(--lo-blue-deep); display: block; margin-bottom: 3px; }
+.neel .nl-form td:last-child { position: relative; }
+.neel .nl-form input[type="text"], .neel .nl-form input[type="password"] { width: 100% !important; height: 24px !important; font-size: 9.5px !important; padding: 0 8px !important; border: 1px solid #c9d6e6 !important; border-radius: 6px !important; background: #f7faff !important; }
+.neel .nl-form input:focus, .neel .nj-form input:focus, .neel .nj-form select:focus, .neel .nj-form textarea:focus { outline: none; border-color: var(--lo-blue) !important; box-shadow: 0 0 0 2px rgba(6,90,175,.15); background: #fff !important; }
+.neel .nl-eye { position: absolute; right: 7px; top: 7px; }
+.neel .nl-form label { font-size: 8.5px; }
+.neel .nl-form button[type="submit"], .neel .nj-form button[type="submit"] { background: var(--lo-mix) !important; color: #fff !important; border: 0 !important; border-radius: 6px !important; font-size: 10px !important; font-weight: bold; padding: 7px 0 !important; width: 100%; letter-spacing: .4px; box-shadow: 0 6px 14px -6px rgba(6,90,175,.6); }
+.neel .nl-form button[type="submit"]:hover, .neel .nj-form button[type="submit"]:hover { filter: brightness(1.08); }
+.neel .nl-form button[type="submit"]:disabled, .neel .nj-form button[type="submit"]:disabled { opacity: .55; cursor: not-allowed; }
+.neel .nl-form a { display: block; text-align: right; margin: 6px 0 0; font-size: 8.5px; }
+.neel .nl-link { display: block; width: 100%; text-align: center; margin-top: 10px; padding-top: 10px; border-top: 1px solid #e3e9f2; text-decoration: none; font-weight: bold; color: var(--lo-green); font-size: 8.5px; }
+
+.neel .nj::before { content: "Create Your Life OS Account"; display: block; width: 560px; margin: 24px auto 0; border-radius: 12px 12px 0 0; text-align: center; font-size: 13px; font-weight: bold; letter-spacing: .3px; padding: 15px 0 13px; }
+.neel .nj-sponsor { width: 560px; margin: 0 auto; background: #f1f7e8; color: var(--lo-blue-deep); border-left: 3px solid var(--lo-green); padding: 7px 12px; font-size: 9px; }
+.neel .nj-sponsor::before { content: "Sponsor: "; font-weight: bold; color: var(--lo-green); }
+.neel .nj > .nj-err, .neel .nj > p[role="status"] { width: 560px; margin: 8px auto; font-size: 9px; }
+.neel .nj-form { width: 560px; margin: 0 auto 30px; border-radius: 0 0 12px 12px; padding: 18px 26px 20px; }
+.neel .nj-form table { width: 100%; }
+.neel .nj-form td { padding: 0 0 8px !important; font-size: 9px !important; }
+.neel .nj-form td:first-child { width: 160px !important; font-weight: bold; color: var(--lo-blue-deep); }
+.neel .nj-form td:nth-child(2) { width: 12px !important; color: #9aa9bb; }
+.neel .nj-form input:not([type="radio"]):not([type="checkbox"]):not([type="file"]), .neel .nj-form select { width: 100% !important; height: 22px !important; font-size: 9px !important; padding: 0 8px !important; border: 1px solid #c9d6e6 !important; border-radius: 6px !important; background: #f7faff !important; }
+.neel .nj-form textarea { width: 100% !important; height: 50px !important; font-size: 9px !important; padding: 5px 8px !important; border: 1px solid #c9d6e6 !important; border-radius: 6px !important; background: #f7faff !important; }
+.neel .nj-form input[readonly] { background: #eef4fb !important; color: var(--lo-blue-deep); font-weight: bold; }
+.neel .nj-team { gap: 10px; }
+.neel .nj-team label { border: 1px solid #c9d6e6; border-radius: 6px; padding: 4px 12px; background: #f7faff; cursor: pointer; }
+.neel .nj-team label:has(input:checked) { border-color: var(--lo-green); background: #f1f7e8; color: var(--lo-blue-deep); font-weight: bold; }
+.neel .nj-form tr:last-child td:nth-child(2) { color: transparent; }
+.neel #main_member .nl-form input[type="text"], .neel #main_member .nl-form input[type="password"] { width: 100% !important; height: 26px !important; font-size: 10px !important; padding: 0 8px !important; border: 1px solid #c9d6e6 !important; border-radius: 6px !important; background: #f7faff !important; }
+.neel #main_member .nj-form input:not([type="radio"]):not([type="checkbox"]):not([type="file"]), .neel #main_member .nj-form select { width: 100% !important; height: 24px !important; font-size: 9.5px !important; padding: 0 8px !important; border: 1px solid #c9d6e6 !important; border-radius: 6px !important; background: #f7faff !important; }
+.neel #main_member .nj-form textarea { width: 100% !important; height: 54px !important; font-size: 9.5px !important; padding: 5px 8px !important; border: 1px solid #c9d6e6 !important; border-radius: 6px !important; background: #f7faff !important; }
+.neel #main_member .nj-form input[readonly] { background: #eef4fb !important; }
+.neel #main_member .nl-form button[type="submit"], .neel #main_member .nj-form button[type="submit"] { width: 100%; padding: 8px 0 !important; font-size: 10.5px !important; }
+.neel #main_member .nl-form td, .neel #main_member .nl-form label { line-height: 1.3 !important; padding: 0 !important; }
+.neel #main_member .nl-form table { width: 100% !important; }
+.neel #main_member .nl-form td:first-child { width: auto !important; }
+.neel #main_member .nl-form td:last-child { width: 100% !important; }
+.neel #main_member .nj-form table { width: 100% !important; }
+.neel #main_member .nj-form td:first-child { width: 160px !important; }
+.neel #main_member .nl-eye { top: 8px; right: 8px; }
+.lifeos-member.neel #main_member form.nj-form input:not([type="radio"]):not([type="checkbox"]):not([type="submit"]):not([type="file"]),
+.lifeos-member.neel #main_member form.nl-form input:not([type="radio"]):not([type="checkbox"]):not([type="submit"]):not([type="file"]) { width: 100% !important; height: 24px !important; font-size: 9.5px !important; padding: 0 8px !important; border: 1px solid #c9d6e6 !important; border-radius: 6px !important; background: #f7faff !important; }
+.lifeos-member.neel #main_member form.nl-form input:not([type="radio"]):not([type="checkbox"]):not([type="submit"]):not([type="file"]) { height: 28px !important; font-size: 10.5px !important; }
+.lifeos-member.neel #main_member form.nj-form input[readonly] { background: #eef4fb !important; }
+.lifeos-member.neel #main_member .nl-eye { top: 9px; }
+.lifeos-member.neel #main_member form.nj-form td:last-child { width: 100% !important; }
