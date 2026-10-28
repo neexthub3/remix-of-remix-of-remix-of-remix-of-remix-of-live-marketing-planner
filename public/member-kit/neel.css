@@ -170,3 +170,6 @@
 .neel #main_member form input[type="submit"], .neel #main_member form button { font-size: 8px !important; padding: 1px 5px !important; height: auto !important; }
 .neel #main_member form span, .neel #main_member form small, .neel #main_member form p { font-size: 8.5px !important; }
 .neel #main_member form table td:first-child { width: 125px; }
+.neel #main_member form table:not(.np-t) { width: auto !important; }
+.neel #main_member form table:not(.np-t) td:first-child { width: 135px !important; }
+.neel #main_member form table:not(.np-t) td:nth-child(2) { width: 14px !important; }
