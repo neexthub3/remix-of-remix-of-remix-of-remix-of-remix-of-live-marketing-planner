@@ -112,3 +112,10 @@
 .neel .tree-node .avatar { border-color: var(--lo-blue); color: var(--lo-blue); background: #eaf2fb; }
 .neel .anchor_button { background: var(--lo-blue); }
 .neel #message { font-size: 11px; }
+
+/* Menu bar must win over older kit menu.css (#menu / .ddsmoothmenu rules) */
+.lifeos-member.neel #menu.neel-nav, .lifeos-member.neel .neel-nav.ddsmoothmenu { background: var(--lo-blue) !important; height: 37px !important; padding: 0 !important; margin: 0 !important; }
+.lifeos-member.neel #menu.neel-nav > ul { background: none !important; height: 37px !important; padding-left: 10px !important; }
+.lifeos-member.neel #menu.neel-nav > ul > li { float: none !important; }
+.lifeos-member.neel #menu.neel-nav > ul > li > a { line-height: 37px !important; height: 37px !important; padding: 0 13px !important; background: none !important; font-size: 12.5px !important; }
+.lifeos-member.neel #menu.neel-nav > ul > li > a:hover { background: var(--lo-green) !important; }
