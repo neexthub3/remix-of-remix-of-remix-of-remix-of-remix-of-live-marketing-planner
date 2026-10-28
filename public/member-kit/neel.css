@@ -151,3 +151,25 @@
 .neel .np-grid > table { align-self: start; }
 .neel .np-r td { padding-bottom: 6px; }
 .neel .nt-join { margin-top: 22px; }
+
+/* Report filter bar (reference "Commission List") */
+.neel .nr-filter { text-align: center; margin: 0 0 10px; font-size: 8.5px; }
+.neel .nr-filter b { font-weight: bold; margin-left: 14px; }
+.neel .nr-filter input[type="date"], .neel .nr-filter input[type="text"] { width: 78px; height: 13px; font-size: 8px; }
+.neel .nr-filter select { width: 96px; height: 13px; font-size: 8px; }
+.neel .nr-filter input[type="submit"] { margin-left: 14px; font-size: 8px; }
+.neel .table thead th { font-size: 8px; padding: 3px 2px; }
+.neel .table td { font-size: 8px; padding: 3px 3px; }
+.neel .table tfoot tr.total td { background: var(--lo-blue); color: #fff; font-weight: bold; text-align: right; border: 0; padding: 5px 3px; font-size: 8px; }
+
+/* All member form pages: compact reference sizing (overrides older inline sizes) */
+.neel #main_member form td, .neel #main_member form th, .neel #main_member form label { font-size: 8.5px !important; height: auto !important; line-height: 1.4 !important; padding-top: 1px !important; padding-bottom: 3px !important; }
+.neel #main_member form input:not([type="radio"]):not([type="checkbox"]):not([type="submit"]):not([type="file"]),
+.neel #main_member form select { width: 131px !important; height: 13px !important; font-size: 8px !important; padding: 0 3px !important; background: #fff !important; }
+.neel #main_member form textarea { width: 131px !important; height: 45px !important; font-size: 8px !important; padding: 2px 3px !important; }
+.neel #main_member form input[type="submit"], .neel #main_member form button { font-size: 8px !important; padding: 1px 5px !important; height: auto !important; }
+.neel #main_member form span, .neel #main_member form small, .neel #main_member form p { font-size: 8.5px !important; }
+.neel #main_member form table td:first-child { width: 125px; }
+.neel #main_member form table:not(.np-t) { width: auto !important; }
+.neel #main_member form table:not(.np-t) td:first-child { width: 135px !important; }
+.neel #main_member form table:not(.np-t) td:nth-child(2) { width: 14px !important; }

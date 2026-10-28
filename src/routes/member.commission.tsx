@@ -21,16 +21,16 @@ function Commission() {
     return (!applied.from || d >= applied.from) && (!applied.to || d <= applied.to);
   });
   return (
-    <Page title="Bonus Report" center>
-      <form style={{ margin: "10px 0", textAlign: "center" }} onSubmit={(e) => { e.preventDefault(); setApplied({ from, to, type }); }}>
-        <b>Date From:</b> <input type="date" value={from} onChange={(e) => setFrom(e.target.value)} style={{ width: 140 }} />
-        <b style={{ marginLeft: 20 }}>Date To:</b> <input type="date" value={to} onChange={(e) => setTo(e.target.value)} style={{ width: 140 }} />
-        <b style={{ marginLeft: 20 }}>Report Type:</b>{" "}
-        <select value={type} onChange={(e) => setType(e.target.value)} style={{ width: 160 }}>
+    <Page title="Commission List">
+      <form className="nr-filter" onSubmit={(e) => { e.preventDefault(); setApplied({ from, to, type }); }}>
+        <b>Date From:</b> <input type="date" value={from} onChange={(e) => setFrom(e.target.value)} />
+        <b>Date To:</b> <input type="date" value={to} onChange={(e) => setTo(e.target.value)} />
+        <b>Report Type:</b>{" "}
+        <select value={type} onChange={(e) => setType(e.target.value)}>
           <option value="All">All</option>
           {Object.entries(LEDGER_LABELS).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
         </select>
-        <input type="submit" value="Search" style={{ marginLeft: 20 }} />
+        <input type="submit" value="Search" />
       </form>
       <DataTable
         head={["Sl", "Date & Time", "Reference", "Bonus Type", "Status", "Cashout Amount"]}
@@ -39,6 +39,7 @@ function Commission() {
           `${LEDGER_LABELS[r.ledger_type] ?? r.ledger_type}${r.level ? ` [${r.level}]` : ""}`, r.status,
           <span key="a" style={{ display: "block", textAlign: "right" }}>{bdt(r.amount)}</span>,
         ])}
+        foot={rows.length ? ["", "", "", "", "All Total", bdt(rows.reduce((a, r) => a + Number(r.amount), 0))] : undefined}
       />
     </Page>
   );
