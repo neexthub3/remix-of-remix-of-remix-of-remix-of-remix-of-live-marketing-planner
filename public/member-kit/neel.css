@@ -261,3 +261,8 @@
 .neel #main_member .nj-form table { width: 100% !important; }
 .neel #main_member .nj-form td:first-child { width: 160px !important; }
 .neel #main_member .nl-eye { top: 8px; right: 8px; }
+.lifeos-member.neel #main_member form.nj-form input:not([type="radio"]):not([type="checkbox"]):not([type="submit"]):not([type="file"]),
+.lifeos-member.neel #main_member form.nl-form input:not([type="radio"]):not([type="checkbox"]):not([type="submit"]):not([type="file"]) { width: 100% !important; height: 24px !important; font-size: 9.5px !important; padding: 0 8px !important; border: 1px solid #c9d6e6 !important; border-radius: 6px !important; background: #f7faff !important; }
+.lifeos-member.neel #main_member form.nl-form input:not([type="radio"]):not([type="checkbox"]):not([type="submit"]):not([type="file"]) { height: 28px !important; font-size: 10.5px !important; }
+.lifeos-member.neel #main_member form.nj-form input[readonly] { background: #eef4fb !important; }
+.lifeos-member.neel #main_member .nl-eye { top: 9px; }
