@@ -15,25 +15,38 @@ function find(n: Node | null, id: string): Node | null {
   return find(n.left, id) ?? find(n.right, id);
 }
 
-function Person({ n, w, onPick, link }: { n: Node | null; w: number; onPick: (n: Node) => void; link: boolean }) {
-  if (!n) return <span className="nt-node empty"><img src="/member-kit/neel/avatar-empty.png" width={w} alt="" /><span>Register</span></span>;
+function Person({ n, w, onPick, link, parent, side }: { n: Node | null; w: number; onPick: (n: Node) => void; link: boolean; parent?: Node | null | undefined; side?: "L" | "R" | undefined }) {
+  if (!n) {
+    if (!parent) return <span className="nt-node blank" style={{ width: w }} />;
+    return <a className="nt-node empty" href={`/join?ref=${encodeURIComponent(parent.life_id)}&team=${side}`}><img src="/member-kit/neel/avatar-empty.png" width={w} alt="" style={{ opacity: 0.45 }} /><span>Register</span></a>;
+  }
   return (
-    <a href="#" className="nt-node" title={`Left carry: ${n.left_carry} | Right carry: ${n.right_carry}`} style={{ opacity: n.active ? 1 : 0.55 }} onClick={(e) => { e.preventDefault(); if (link) onPick(n); }}>
+    <a href="#" className="nt-node" style={{ opacity: n.active ? 1 : 0.6 }} onClick={(e) => { e.preventDefault(); if (link) onPick(n); }}>
       <img src="/member-kit/neel/avatar-active.png" width={w} alt="" /><span>User ID: {n.life_id}</span>
+      <em className="nt-tip">
+        <b>User ID: <i>{n.life_id}</i></b>
+        <b>Status: <i>{n.active ? "Active" : "Inactive"}</i></b>
+        <b>Left Carry: <i>{n.left_carry}</i></b>
+        <b>Right Carry: <i>{n.right_carry}</i></b>
+        <b>Left Placed: <i>{n.left ? n.left.life_id : "—"}</i></b>
+        <b>Right Placed: <i>{n.right ? n.right.life_id : "—"}</i></b>
+      </em>
     </a>
   );
 }
 
-function Branch({ n, depth, w, onPick }: { n: Node | null; depth: number; w: number; onPick: (n: Node) => void }) {
+const SIZES = [150, 120, 84, 60];
+function Branch({ n, depth, onPick, parent, side }: { n: Node | null; depth: number; onPick: (n: Node) => void; parent?: Node | null; side?: "L" | "R" }) {
+  const w = SIZES[depth] ?? 60;
   return (
     <div className="nt-col">
-      <Person n={n} w={w} onPick={onPick} link={depth > 0} />
-      {depth < 2 && n && (
+      <Person n={n} w={w} onPick={onPick} link={depth > 0} parent={parent} side={side} />
+      {depth < 3 && n && (
         <>
           <div className="nt-join"><i /></div>
           <div className="nt-kids">
-            <Branch n={n.left} depth={depth + 1} w={Math.round(w * 0.8)} onPick={onPick} />
-            <Branch n={n.right} depth={depth + 1} w={Math.round(w * 0.8)} onPick={onPick} />
+            <Branch n={n.left} depth={depth + 1} onPick={onPick} parent={n} side="L" />
+            <Branch n={n.right} depth={depth + 1} onPick={onPick} parent={n} side="R" />
           </div>
         </>
       )}
@@ -65,7 +78,7 @@ function Tree() {
       {!top ? <p>{q.isLoading ? "Loading…" : "No tree data yet."}</p> : (
         <div className="nt-wrap">
           <a href="#" className="nt-up" title="Back to my tree" onClick={(e) => { e.preventDefault(); setRoot(null); }}><img src="/member-kit/neel/tree-top.png" width={46} alt="Top" /></a>
-          <Branch n={top} depth={0} w={112} onPick={setRoot} />
+          <Branch n={top} depth={0} onPick={setRoot} />
         </div>
       )}
     </Page>
