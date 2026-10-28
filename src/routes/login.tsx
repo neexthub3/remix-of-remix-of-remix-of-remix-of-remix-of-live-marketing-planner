@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { memberApi, memberToken, DEMO_TOKEN } from "@/lib/member-api";
+import { memberApi, memberToken } from "@/lib/member-api";
 import { useState } from "react";
 import { Truck, ShieldCheck, Headphones, Eye, EyeOff } from "lucide-react";
 
@@ -47,7 +47,6 @@ function Login() {
     if (u) u.value = "ROOT";
     pw?.focus();
   };
-  const demo = () => { memberToken.set(DEMO_TOKEN); navigate({ to: "/member" }); };
   return (
     <div className="login-page">
       <div className="login-card">
@@ -84,7 +83,6 @@ function Login() {
             <button className="login-submit" type="submit" disabled={busy}>{busy ? "Signing in…" : "Login"}</button>
             <div className="login-divider"><span>OR</span></div>
             <button type="button" className="login-link login-merchant" onClick={root} style={{ background: "none", border: 0, cursor: "pointer" }}>Login as ROOT (company account)</button>
-            <button type="button" className="login-link login-merchant" onClick={demo} style={{ background: "none", border: 0, cursor: "pointer" }}>View demo member panel</button>
           </form>
         </section>
       </div>
