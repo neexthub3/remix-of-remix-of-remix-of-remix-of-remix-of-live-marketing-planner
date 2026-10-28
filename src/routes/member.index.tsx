@@ -24,81 +24,61 @@ function Dashboard() {
   const totalIn = Object.values(by).reduce((a, b) => a + Number(b), 0);
   const totalOut = Number(w?.withdrawn ?? 0) + Number(w?.pending_withdrawal ?? 0);
 
-  const rows: [string, React.ReactNode][] = [
+  const info: [string, React.ReactNode][] = [
+    ["Account Username", me.life_id],
     ["Account Full Name", me.name],
-    ["Account UserID", me.life_id],
-    ["Account Rank", <b key="r">{rank?.current?.name ?? "Member"}</b>],
-    ["Account Status", me.status],
     ["Email Address", me.email ?? "N/A"],
     ["Cell Number", me.phone],
     ["Joining Date Time", me.created_at],
+    ["Account Status", me.status],
     ["Referral Code", me.referral_code],
-    ["Left Team Link", <JoinLink key="left" code={me.referral_code} team="L" />],
-    ["Right Team Link", <JoinLink key="right" code={me.referral_code} team="R" />],
-    ["Referral UserID", me.referred_by ?? "N/A"],
+    ["Refer ID", me.referred_by ?? "N/A"],
     ["Total Referral", me.total_referral],
     ["Lifetime Matchings", rank?.lifetime_matchings ?? 0],
   ];
+  const line = <tr className="line"><td colSpan={2}><hr /></td></tr>;
 
   return (
     <Page title="Dashboard">
-      <table className="lifeos-dashboard-layout" width="100%" border={0} cellSpacing={0} cellPadding={0}>
-        <tbody>
-          <tr>
-            <td width="5%" style={{ padding: "0 20px" }} />
-            <td width="42%" valign="top" className="profile_images">
-              <table width="100%" border={0} cellSpacing={0} cellPadding={7}>
-                <tbody>
-                  <tr>
-                    <td colSpan={2} style={{ textAlign: "center" }}>
-                      <span className="tree-node"><span className="avatar" style={{ width: 160, height: 160, lineHeight: "160px", fontSize: 48 }}>{me.name.slice(0, 1)}</span></span>
-                      <br /><br />
-                    </td>
-                  </tr>
-                  {rows.map(([k, v]) => (
-                    <tr key={k}><th style={{ width: "50%" }}>{k}</th><td>{v}</td></tr>
-                  ))}
-                </tbody>
-              </table>
-            </td>
-            <td width="6%" style={{ padding: "0 20px" }} />
-            <td width="42%" valign="top" style={{ padding: "0 20px" }}>
-              <h4><u>Cash In</u></h4>
-              <table width="100%" border={0} cellSpacing={7} cellPadding={0} className="table_wallet account_images_div">
-                <tbody>
-                  {["REFERRAL", "MATCHING", "GENERATION", "RANK", "ADJUSTMENT"].map((t) => (
-                    <tr key={t}><td width="70%">Total {LEDGER_LABELS[t]}</td><td className="right">{bdt(by[t])}</td></tr>
-                  ))}
-                  <tr><td colSpan={2}><hr /></td></tr>
-                  <tr><td className="right"><b>All Total In Amount</b></td><td className="right">{bdt(totalIn)}</td></tr>
-                </tbody>
-              </table>
-              <br />
-              <h4><u>Cash Out</u></h4>
-              <table width="100%" border={0} cellSpacing={7} cellPadding={0} className="table_wallet account_images_div">
-                <tbody>
-                  <tr><td>Total Withdrawals Amount</td><td className="right">{bdt(w?.withdrawn)}</td></tr>
-                  <tr><td>Pending Withdrawals</td><td className="right">{bdt(w?.pending_withdrawal)}</td></tr>
-                  <tr><td colSpan={2}><hr /></td></tr>
-                  <tr><td className="right"><b>All Total Out Amount</b></td><td className="right"><b>{bdt(totalOut)}</b></td></tr>
-                </tbody>
-              </table>
-              <br />
-              <h4><u>Current Balance</u></h4>
-              <table width="100%" border={0} cellSpacing={7} cellPadding={0} className="table_wallet account_images_div">
-                <tbody>
-                  <tr><td><b>All Total In Amount</b></td><td className="right">{bdt(totalIn)}</td></tr>
-                  <tr><td><b>All Total Out Amount</b></td><td className="right">- {bdt(totalOut)}</td></tr>
-                  <tr><td colSpan={2}><hr /></td></tr>
-                  <tr><td className="right"><b>Remaining Current Balance</b></td><td className="right"><b>{bdt(w?.withdrawable)}</b></td></tr>
-                  <tr><td>Cashback Wallet (service use only)</td><td className="right">{bdt(w?.cashback_service_only)}</td></tr>
-                </tbody>
-              </table>
-            </td>
-            <td width="5%" />
-          </tr>
-        </tbody>
-      </table>
+      <div className="nd-grid">
+        <div>
+          <div className="nd-title">Credit Statement</div>
+          <table className="nd-st"><tbody>
+            {["REFERRAL", "MATCHING", "GENERATION", "RANK", "ADJUSTMENT"].map((t) => (
+              <tr key={t}><td>Total {LEDGER_LABELS[t]}</td><td className="r">{bdt(by[t])}</td></tr>
+            ))}
+            {line}
+            <tr className="sum"><td>All Total Amount</td><td>{bdt(totalIn)}</td></tr>
+            <tr className="sum"><td>Total Withdrawals Amount</td><td>- {bdt(w?.withdrawn)}</td></tr>
+            <tr className="sum"><td>Pending Withdrawals</td><td>- {bdt(w?.pending_withdrawal)}</td></tr>
+            {line}
+            <tr className="cur"><td>Current Credit Balance</td><td>{bdt(w?.withdrawable)}</td></tr>
+          </tbody></table>
+          <div className="nd-title" style={{ marginTop: 22 }}>Service Wallet Statement</div>
+          <table className="nd-st"><tbody>
+            <tr><td>Cashback Wallet (service use only)</td><td className="r">{bdt(w?.cashback_service_only)}</td></tr>
+            <tr><td>All Total Out Amount</td><td className="r">{bdt(totalOut)}</td></tr>
+            {line}
+            <tr className="cur"><td>Remaining Current Balance</td><td>{bdt(w?.withdrawable)}</td></tr>
+          </tbody></table>
+        </div>
+        <div className="nd-right">
+          <span className="nd-photo"><img src="/member-kit/neel/photo.jpg" alt={me.name} /></span>
+          <table className="nd-info"><tbody>
+            {info.map(([k, v]) => <tr key={k}><td>{k}</td><td>:</td><td>{v}</td></tr>)}
+          </tbody></table>
+          <div className="nd-box"><div className="k">ID STATUS</div><div className="v">{rank?.current?.name ?? "Member"}</div></div>
+          <div className="nd-box"><div className="k">CURRENT BALANCE</div><div className="v">{bdt(w?.withdrawable)}</div></div>
+        </div>
+      </div>
+      <div className="nd-share">
+        <div className="t">Share my direct register affiliate link for my team Affiliations</div>
+        <div className="links">
+          <JoinLink code={me.referral_code} team="L" />
+          <JoinLink code={me.referral_code} team="R" />
+        </div>
+      </div>
+      <div className="nd-msg"><div className="h">Message Box</div><div className="b"><div className="c">Sorry, no message for you right now.</div></div></div>
     </Page>
   );
 }
@@ -112,13 +92,10 @@ function JoinLink({ code, team }: { code: string; team: JoinTeam }) {
     catch { setStatus("Copy unavailable — select the link above."); }
   }
   return (
-    <span className="member-referral-link">
-      <input aria-label={`${team === "L" ? "Left" : "Right"} Team referral link`} readOnly value={url} onFocus={e => e.currentTarget.select()} />
-      <span className="member-referral-actions">
-        <Button variant="reference" type="button" onClick={copy} disabled={!url} title={`Copy ${team === "L" ? "Left" : "Right"} Team link`}><Copy size={13} /> Copy</Button>
-        <Button variant="reference" asChild><a href={url || undefined} target="_blank" rel="noreferrer" title="Open joining form"><ExternalLink size={13} /> Open</a></Button>
-      </span>
-      <span role="status">{status}</span>
-    </span>
+    <div>
+      <a className="link" href={url || undefined} target="_blank" rel="noreferrer"><small>{team === "L" ? "LEFT TEAM" : "RIGHT TEAM"}</small>{url}</a>
+      <button type="button" onClick={copy} disabled={!url}>Copy</button>
+      {status && <small role="status" style={{ marginLeft: 6 }}>{status}</small>}
+    </div>
   );
 }
