@@ -18,10 +18,34 @@ final class Config
     {
         if (self::$c === null) {
             $f = LIFEOS_ROOT . '/config.php';
-            if (!is_file($f)) throw new HttpError('Server not configured: create config.php', 500);
-            self::$c = require $f;
+            $env = self::env();
+            if (!is_file($f) && !$env) throw new HttpError('Server not configured: create config.php or .env', 500);
+            self::$c = is_file($f) ? (require $f) : [];
+            // .env values (project root or backendserver/) override config.php.
+            $map = ['LIFEOS_DB_HOST' => ['db', 'host'], 'LIFEOS_DB_PORT' => ['db', 'port'], 'LIFEOS_DB_NAME' => ['db', 'name'],
+                'LIFEOS_DB_USER' => ['db', 'user'], 'LIFEOS_DB_PASS' => ['db', 'pass'],
+                'LIFEOS_APP_SECRET' => ['app_secret'], 'LIFEOS_MASTER_KEY' => ['master_key']];
+            foreach ($map as $k => $path) {
+                if (!isset($env[$k]) || $env[$k] === '') continue;
+                $v = $k === 'LIFEOS_DB_PORT' ? (int) $env[$k] : $env[$k];
+                if (count($path) === 2) self::$c[$path[0]][$path[1]] = $v; else self::$c[$path[0]] = $v;
+            }
         }
         return self::$c[$key] ?? $default;
+    }
+
+    /** Reads KEY="value" lines from .env beside or above backendserver/. */
+    public static function env(): array
+    {
+        $out = [];
+        foreach ([dirname(LIFEOS_ROOT) . '/.env', LIFEOS_ROOT . '/.env'] as $file) {
+            if (!is_file($file)) continue;
+            foreach (file($file, FILE_IGNORE_NEW_LINES) ?: [] as $line) {
+                if (!preg_match('/^\s*([A-Z0-9_]+)\s*=\s*(.*)$/', $line, $m)) continue;
+                $out[$m[1]] = trim(trim($m[2]), "\"'");
+            }
+        }
+        return $out;
     }
 }
 

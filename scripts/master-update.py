@@ -10,6 +10,16 @@ import time
 import urllib.request
 import urllib.error
 
+def load_env():
+    path = Path(__file__).resolve().parents[1] / ".env"
+    if path.is_file():
+        for line in path.read_text().splitlines():
+            if "=" in line and not line.strip().startswith("#"):
+                k, v = line.split("=", 1)
+                os.environ.setdefault(k.strip(), v.strip().strip('"').strip("'"))
+
+
+load_env()
 BASE = os.environ.get("LIFEOS_SERVER_URL", "https://server.nexarofx.com/lifeos/backendserver").rstrip("/")
 ROOT = Path(__file__).resolve().parents[1] / "backendserver"
 FILES = ["src/Migrations.php", "src/bootstrap.php", "src/Auth.php", "src/PanelPolicy.php", "src/Api/routes_master.php", "src/Api/routes_member.php", "src/Engine/Wallet.php", "src/Engine/Commission.php", "src/Engine/Placement.php", "src/Engine/Plan.php", "src/Engine/Rank.php", "src/Api/routes_admin.php", "config.example.php", "README.md", ".htaccess"]
