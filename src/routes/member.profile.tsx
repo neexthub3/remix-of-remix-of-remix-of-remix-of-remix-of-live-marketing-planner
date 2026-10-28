@@ -58,39 +58,33 @@ function Profile() {
 
   const field = ([k, l]: [string, string]) => (
     <tr key={k}>
-      <td style={lbl}>{l}</td><td style={{ width: "5%", fontSize: 16 }}>:</td>
-      <td><input style={inp} type="text" placeholder={k === "dob" ? "YYYY-MM-DD" : undefined} value={f[k] ?? ""} onChange={(e) => setF({ ...f, [k]: e.target.value })} /></td>
+      <td>{l}</td><td>:</td>
+      <td><input type="text" placeholder={k === "dob" ? "YYYY-MM-DD" : undefined} value={f[k] ?? ""} onChange={(e) => setF({ ...f, [k]: e.target.value })} /></td>
     </tr>
   );
   const img = photo || f["photo_base64"];
+  const locked = busy || !q.data || !settings.data || settings.data["profile_edit_status"] === "0";
 
   return (
     <Page title="My Profile">
-      <form onSubmit={save} className="lifeos-profile">
+      <form onSubmit={save} className="np-form">
         <Msg ok={msg?.ok} text={msg?.t ?? null} />
         <Msg text={q.error ? (q.error as Error).message : settings.error ? (settings.error as Error).message : settings.data?.["profile_edit_status"] === "0" ? "Profile editing is currently disabled." : null} />
-        <div className="lifeos-profile-grid">
-          <table border={0} cellSpacing={0} cellPadding={0} style={{ width: "100%" }}>
-            <tbody>
-              {TOP.map(field)}
-              <tr><td style={lbl}>Email Address</td><td style={{ fontSize: 16 }}>:</td><td><input style={inp} readOnly value={me?.email ?? ""} /></td></tr>
-              <tr><td style={lbl}>Mobile Number</td><td style={{ fontSize: 16 }}>:</td><td><input style={inp} readOnly value={me?.phone ?? ""} /></td></tr>
-              {field(["phone_alt", "Alternate Number"])}
-              <tr><td style={lbl}>Address</td><td style={{ fontSize: 16 }}>:</td>
-                <td><textarea style={{ ...inp, height: 97, width: 287, padding: 10 }} value={f["address_current"] ?? ""} onChange={(e) => setF({ ...f, address_current: e.target.value })} /></td></tr>
-              {BOTTOM.map(field)}
-            </tbody>
-          </table>
-          <table border={0} cellSpacing={0} cellPadding={0} style={{ width: "100%" }}>
-            <tbody>
-              <tr><td style={lbl}>Passport Photo</td><td style={{ width: "5%", fontSize: 16 }}>:</td>
-                <td>{img ? <img src={img} alt="Passport" style={{ width: 322, maxWidth: "100%", height: 204, objectFit: "cover", border: "1px solid #ddd" }} /> : <div className="flex h-48 items-center justify-center border border-border text-muted-foreground">No photo</div>}</td></tr>
-              <tr><td style={lbl}>New Photo</td><td style={{ fontSize: 16 }}>:</td>
-                <td><input type="file" accept="image/*" onChange={onFile} style={{ border: 0, fontSize: 16, background: "transparent", padding: 0 }} /></td></tr>
-              <tr className="lifeos-profile-spacer"><td style={{ height: 160 }} /><td /><td /></tr>
-              <tr><td /><td /><td><input type="submit" value={busy ? "Saving…" : "Save"} disabled={busy || !q.data || !settings.data || settings.data["profile_edit_status"] === "0"} style={{ fontSize: 16, border: "1px solid #AAA", background: "#fff", padding: "2px 8px" }} /></td></tr>
-            </tbody>
-          </table>
+        <div className="np-grid">
+          <table className="np-t"><tbody>
+            {TOP.map(field)}
+            <tr><td>Email Address</td><td>:</td><td><input readOnly value={me?.email ?? ""} /></td></tr>
+            <tr><td>Mobile Number</td><td>:</td><td><input readOnly value={me?.phone ?? ""} /></td></tr>
+            {field(["phone_alt", "Alternate Number"])}
+            <tr><td>Address</td><td>:</td><td><textarea value={f["address_current"] ?? ""} onChange={(e) => setF({ ...f, address_current: e.target.value })} /></td></tr>
+            {BOTTOM.map(field)}
+          </tbody></table>
+          <table className="np-t np-r"><tbody>
+            <tr><td>Passport Photo</td><td>:</td><td>{img ? <img src={img} alt="Passport" className="np-photo" /> : "No photo available"}</td></tr>
+            <tr><td>New Photo</td><td>:</td><td><input type="file" accept="image/*" onChange={onFile} className="np-file" /></td></tr>
+            <tr><td style={{ height: 70 }} /><td /><td /></tr>
+            <tr><td /><td /><td><input type="submit" value={busy ? "Saving…" : "Save"} disabled={locked} /></td></tr>
+          </tbody></table>
         </div>
       </form>
     </Page>
