@@ -75,8 +75,3 @@
 - [x] Verified in browser: build OK, no console errors
 - [ ] Confirm rank name "Gold/Executive" (1000 matchings) — the plan document labels it this way; rename if it is a typo
 - [ ] Live PHP API verification — blocked: deserver.neexthub.site returns 502
-
-## Member panel reference recheck (live ref site)
-- [x] Tree: 4 levels, hover info, Register links, plain avatars
-- [x] Referral List / Referral Level / Own Account List pages + live API
-- [ ] Verify the new lists with real downline members (ROOT has none yet)

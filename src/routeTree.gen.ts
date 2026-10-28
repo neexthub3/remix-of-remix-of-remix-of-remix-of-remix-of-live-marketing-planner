@@ -62,9 +62,7 @@ import { Route as MemberActivationRouteImport } from './routes/member.activation
 import { Route as MemberChangePasswordRouteImport } from './routes/member.change-password'
 import { Route as MemberCommissionRouteImport } from './routes/member.commission'
 import { Route as MemberNoticeRouteImport } from './routes/member.notice'
-import { Route as MemberOwnAccountsRouteImport } from './routes/member.own-accounts'
 import { Route as MemberProfileRouteImport } from './routes/member.profile'
-import { Route as MemberReferralLevelRouteImport } from './routes/member.referral-level'
 import { Route as MemberSponsorsRouteImport } from './routes/member.sponsors'
 import { Route as MemberStatisticsRouteImport } from './routes/member.statistics'
 import { Route as MemberTreeRouteImport } from './routes/member.tree'
@@ -337,19 +335,9 @@ const MemberNoticeRoute = MemberNoticeRouteImport.update({
   path: '/notice',
   getParentRoute: () => MemberRoute,
 } as any)
-const MemberOwnAccountsRoute = MemberOwnAccountsRouteImport.update({
-  id: '/own-accounts',
-  path: '/own-accounts',
-  getParentRoute: () => MemberRoute,
-} as any)
 const MemberProfileRoute = MemberProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
-  getParentRoute: () => MemberRoute,
-} as any)
-const MemberReferralLevelRoute = MemberReferralLevelRouteImport.update({
-  id: '/referral-level',
-  path: '/referral-level',
   getParentRoute: () => MemberRoute,
 } as any)
 const MemberSponsorsRoute = MemberSponsorsRouteImport.update({
@@ -435,9 +423,7 @@ export interface FileRoutesByFullPath {
   '/member/change-password': typeof MemberChangePasswordRoute
   '/member/commission': typeof MemberCommissionRoute
   '/member/notice': typeof MemberNoticeRoute
-  '/member/own-accounts': typeof MemberOwnAccountsRoute
   '/member/profile': typeof MemberProfileRoute
-  '/member/referral-level': typeof MemberReferralLevelRoute
   '/member/sponsors': typeof MemberSponsorsRoute
   '/member/statistics': typeof MemberStatisticsRoute
   '/member/tree': typeof MemberTreeRoute
@@ -497,9 +483,7 @@ export interface FileRoutesByTo {
   '/member/change-password': typeof MemberChangePasswordRoute
   '/member/commission': typeof MemberCommissionRoute
   '/member/notice': typeof MemberNoticeRoute
-  '/member/own-accounts': typeof MemberOwnAccountsRoute
   '/member/profile': typeof MemberProfileRoute
-  '/member/referral-level': typeof MemberReferralLevelRoute
   '/member/sponsors': typeof MemberSponsorsRoute
   '/member/statistics': typeof MemberStatisticsRoute
   '/member/tree': typeof MemberTreeRoute
@@ -562,9 +546,7 @@ export interface FileRoutesById {
   '/member/change-password': typeof MemberChangePasswordRoute
   '/member/commission': typeof MemberCommissionRoute
   '/member/notice': typeof MemberNoticeRoute
-  '/member/own-accounts': typeof MemberOwnAccountsRoute
   '/member/profile': typeof MemberProfileRoute
-  '/member/referral-level': typeof MemberReferralLevelRoute
   '/member/sponsors': typeof MemberSponsorsRoute
   '/member/statistics': typeof MemberStatisticsRoute
   '/member/tree': typeof MemberTreeRoute
@@ -628,9 +610,7 @@ export interface FileRouteTypes {
     | '/member/change-password'
     | '/member/commission'
     | '/member/notice'
-    | '/member/own-accounts'
     | '/member/profile'
-    | '/member/referral-level'
     | '/member/sponsors'
     | '/member/statistics'
     | '/member/tree'
@@ -690,9 +670,7 @@ export interface FileRouteTypes {
     | '/member/change-password'
     | '/member/commission'
     | '/member/notice'
-    | '/member/own-accounts'
     | '/member/profile'
-    | '/member/referral-level'
     | '/member/sponsors'
     | '/member/statistics'
     | '/member/tree'
@@ -754,9 +732,7 @@ export interface FileRouteTypes {
     | '/member/change-password'
     | '/member/commission'
     | '/member/notice'
-    | '/member/own-accounts'
     | '/member/profile'
-    | '/member/referral-level'
     | '/member/sponsors'
     | '/member/statistics'
     | '/member/tree'
@@ -1174,25 +1150,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MemberNoticeRouteImport
       parentRoute: typeof MemberRoute
     }
-    '/member/own-accounts': {
-      id: '/member/own-accounts'
-      path: '/own-accounts'
-      fullPath: '/member/own-accounts'
-      preLoaderRoute: typeof MemberOwnAccountsRouteImport
-      parentRoute: typeof MemberRoute
-    }
     '/member/profile': {
       id: '/member/profile'
       path: '/profile'
       fullPath: '/member/profile'
       preLoaderRoute: typeof MemberProfileRouteImport
-      parentRoute: typeof MemberRoute
-    }
-    '/member/referral-level': {
-      id: '/member/referral-level'
-      path: '/referral-level'
-      fullPath: '/member/referral-level'
-      preLoaderRoute: typeof MemberReferralLevelRouteImport
       parentRoute: typeof MemberRoute
     }
     '/member/sponsors': {
@@ -1289,9 +1251,7 @@ interface MemberRouteChildren {
   MemberChangePasswordRoute: typeof MemberChangePasswordRoute
   MemberCommissionRoute: typeof MemberCommissionRoute
   MemberNoticeRoute: typeof MemberNoticeRoute
-  MemberOwnAccountsRoute: typeof MemberOwnAccountsRoute
   MemberProfileRoute: typeof MemberProfileRoute
-  MemberReferralLevelRoute: typeof MemberReferralLevelRoute
   MemberSponsorsRoute: typeof MemberSponsorsRoute
   MemberStatisticsRoute: typeof MemberStatisticsRoute
   MemberTreeRoute: typeof MemberTreeRoute
@@ -1305,9 +1265,7 @@ const MemberRouteChildren: MemberRouteChildren = {
   MemberChangePasswordRoute: MemberChangePasswordRoute,
   MemberCommissionRoute: MemberCommissionRoute,
   MemberNoticeRoute: MemberNoticeRoute,
-  MemberOwnAccountsRoute: MemberOwnAccountsRoute,
   MemberProfileRoute: MemberProfileRoute,
-  MemberReferralLevelRoute: MemberReferralLevelRoute,
   MemberSponsorsRoute: MemberSponsorsRoute,
   MemberStatisticsRoute: MemberStatisticsRoute,
   MemberTreeRoute: MemberTreeRoute,
