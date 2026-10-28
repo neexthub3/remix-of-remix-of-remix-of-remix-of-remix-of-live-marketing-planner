@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState, type ReactNode } from "react";
 import { memberApi, memberToken } from "@/lib/member-api";
-import { Button } from "@/components/ui/button";
+import { NeelFrame, NEEL_LINKS } from "@/components/neel-frame";
 import { BLOOD_GROUPS, DISTRICTS, type JoinTeam } from "@/lib/join-fields";
 
 type Search = { ref?: string | undefined; team?: JoinTeam | undefined };
@@ -18,6 +18,7 @@ export const Route = createFileRoute("/join")({
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
+    links: NEEL_LINKS,
   }),
   component: Join,
 });
@@ -77,14 +78,14 @@ function Join() {
     finally { setBusy(false); }
   }
   function row(label: string, id: string, control: ReactNode, required = false) {
-    return <div className="join-field" key={id}><label htmlFor={id}>{label}{required && <span className="join-required"> *</span>}</label><span className="join-colon">:</span><div className="join-control">{control}</div></div>;
+    return <tr key={id}><td><label htmlFor={id}>{label}{required && <span className="nj-req"> *</span>}</label></td><td>:</td><td>{control}</td></tr>;
   }
-  return <main className="team-join-page"><section className="team-join-content">
-    <h1>Life OS — Member Registration</h1>
-    {refErr && <p className="join-error" role="alert">{refErr}</p>}
+  return <NeelFrame><div className="main_bg about nj">
+    <h2 id="heading">Register Form</h2>
+    {refErr && <p className="nj-err" role="alert">{refErr}</p>}
     {ref && !refErr && !sponsor && <p role="status">Verifying sponsor and placement…</p>}
-    {sponsor && <p className="join-sponsor">{sponsor.name} · {sponsor.life_id}</p>}
-    <form className="team-join-form" onSubmit={submit}>
+    {sponsor && <p className="nj-sponsor">{sponsor.name} · {sponsor.life_id}</p>}
+    <form className="nj-form" onSubmit={submit}><table><tbody>
       {row("Full Name", "name", <input id="name" name="name" required maxLength={100} autoComplete="name" />, true)}
       {row("Cell Number", "phone", <input id="phone" name="phone" type="tel" required pattern="01[3-9][0-9]{8}" autoComplete="tel" />, true)}
       {row("Email Address", "email", <input id="email" name="email" type="email" required maxLength={120} autoComplete="email" />, true)}
@@ -93,15 +94,15 @@ function Join() {
       {row("District Name", "district", <select id="district" name="district" required defaultValue=""><option value="" disabled>Select</option>{DISTRICTS.map(d => <option key={d}>{d}</option>)}</select>, true)}
       {row("Post Code", "post_code", <input id="post_code" name="post_code" required maxLength={12} autoComplete="postal-code" />, true)}
       {row("Address", "address_current", <textarea id="address_current" name="address_current" required maxLength={2000} rows={4} autoComplete="street-address" />, true)}
-      {row("Profile Passport Size Photo", "photo", <><input id="photo" type="file" accept="image/jpeg,image/png,image/webp" onChange={e => void pickPhoto(e.currentTarget.files?.[0])} />{photo && <img className="join-photo" src={photo} alt="Selected profile photo" />}{photoErr && <p className="join-error" role="alert">{photoErr}</p>}</>)}
+      {row("Profile Passport Size Photo", "photo", <><input id="photo" type="file" accept="image/jpeg,image/png,image/webp" onChange={e => void pickPhoto(e.currentTarget.files?.[0])} />{photo && <img className="nj-photo" src={photo} alt="Selected profile photo" />}{photoErr && <p className="nj-err" role="alert">{photoErr}</p>}</>)}
       {row("Sponsor/Referral ID", "sponsor", <input id="sponsor" value={sponsor?.life_id ?? ref ?? ""} readOnly />, true)}
       {row("Placement UserID", "placement", <input id="placement" value={sponsor?.placement_life_id ?? ""} readOnly />, true)}
-      {row("Choose Option", "team-choice", <fieldset id="team-choice" className="join-team" aria-label="Choose team"><label><input type="radio" name="team" value="L" checked={team === "L"} disabled={!!linkTeam} required onChange={() => setTeam("L")} /> Left Team</label><label><input type="radio" name="team" value="R" checked={team === "R"} disabled={!!linkTeam} required onChange={() => setTeam("R")} /> Right Team</label></fieldset>, true)}
+      {row("Choose Option", "team-choice", <fieldset id="team-choice" className="nj-team" aria-label="Choose team"><label><input type="radio" name="team" value="L" checked={team === "L"} disabled={!!linkTeam} required onChange={() => setTeam("L")} /> Left Team</label><label><input type="radio" name="team" value="R" checked={team === "R"} disabled={!!linkTeam} required onChange={() => setTeam("R")} /> Right Team</label></fieldset>, true)}
       {row("Enter Username", "username", <input id="username" name="username" required minLength={4} maxLength={40} pattern="[A-Za-z][A-Za-z0-9_]{3,39}" autoComplete="username" />, true)}
       {row("Enter Password", "password", <input id="password" name="password" type="password" required minLength={4} maxLength={72} autoComplete="new-password" />, true)}
       {row("Confirm Password", "confirm", <input id="confirm" name="confirm" type="password" required minLength={4} maxLength={72} autoComplete="new-password" />, true)}
-      {row("Terms & Conditions", "terms", <label className="join-terms"><input id="terms" name="terms" type="checkbox" required /> I Agree With Company TOS</label>)}
-      {row("", "submit", <><Button id="submit" variant="reference" className="join-submit" type="submit" disabled={busy || !sponsor || !team || !!photoErr}>{busy ? "Submitting…" : "Submit"}</Button>{err && <p className="join-error" role="alert">{err}</p>}</>)}
-    </form>
-  </section></main>;
+      {row("Terms & Conditions", "terms", <label className="nj-terms"><input id="terms" name="terms" type="checkbox" required /> I Agree With Company TOS</label>)}
+      {row("", "submit", <><button id="submit" type="submit" disabled={busy || !sponsor || !team || !!photoErr}>{busy ? "Submitting…" : "Submit"}</button>{err && <p className="nj-err" role="alert">{err}</p>}</>)}
+    </tbody></table></form>
+  </div></NeelFrame>;
 }
