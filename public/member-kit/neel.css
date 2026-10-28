@@ -350,3 +350,5 @@
 .neel .nt-tip b { display: flex; justify-content: space-between; color: #fff; font-size: 9px; line-height: 17px; font-weight: bold; }
 .neel .nt-tip b i { font-style: normal; color: var(--lo-lime); }
 .neel .nt-node:hover .nt-tip { display: block; }
+/* Tree avatars: plain cut-out like the reference (no circle crop) */
+.neel .nt-node img { border-radius: 0 !important; box-shadow: none !important; }
