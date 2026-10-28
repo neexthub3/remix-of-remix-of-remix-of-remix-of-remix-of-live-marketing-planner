@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import { ShoppingCart } from "lucide-react";
 import { memberApi, memberToken } from "@/lib/member-api";
 
 /** Menu mirrors the reference kit's ddsmoothmenu structure. */
@@ -37,7 +38,7 @@ function printInner() {
   const el = document.getElementById("main_member");
   const w = window.open("", "print", "height=600,width=900");
   if (!el || !w) return;
-  w.document.write('<html><head><title>Life OS</title><style>body{font-family:Tahoma;font-size:12px}table{border-collapse:collapse}th{background:#009541;color:#fff;padding:5px 2px}td{padding:4px}</style></head><body>' + el.innerHTML + '</body></html>');
+  w.document.write('<html><head><title>Life OS</title><style>body{font-family:Tahoma;font-size:12px}table{border-collapse:collapse}th{background:#065aaf;color:#fff;padding:5px 2px}td{padding:4px}</style></head><body>' + el.innerHTML + '</body></html>');
   w.document.close(); w.focus(); w.print(); w.close();
 }
 
@@ -56,7 +57,10 @@ export function MemberShell({ children }: { children: ReactNode }) {
     const viewport = viewportRef.current;
     if (!viewport) return;
     const observer = new ResizeObserver(([entry]) => {
-      if (entry) setScale(Math.min(1, entry.contentRect.width / 1100));
+      if (!entry) return;
+      const vw = entry.contentRect.width;
+      // Same proportions as the reference at every width: 750px canvas = 78% of a desktop viewport, full width on phones.
+      setScale(vw < 800 ? vw / 766 : (vw * 0.78125) / 750);
     });
     observer.observe(viewport);
     return () => observer.disconnect();
@@ -78,59 +82,38 @@ export function MemberShell({ children }: { children: ReactNode }) {
   };
 
   return (
-    <div ref={viewportRef} className="lifeos-member-viewport">
-    <div className="lifeos-member lifeos-member-bg" style={{ zoom: scale }}>
-      <div className="content_full">
-        <div className="header_content lifeos-banner">
-          <Link to="/" aria-label="Life OS home" style={{ display: "block", height: 200 }} />
-        </div>
-      </div>
-      <div className="content_menu">
-        <div className="ddsmoothmenu" id="menu">
-          <ul>
-            {MENU.map((m, i) => (
-              <li key={m.label} style={{ zIndex: 100 - i }} onMouseEnter={() => setOpen(i)} onMouseLeave={() => setOpen(null)}>
-                <a href="#" onClick={(e) => { e.preventDefault(); setOpen(open === i ? null : i); }}>
-                  {m.label} <i className="fa fa-chevron-down" aria-hidden="true" />
-                </a>
-                <ul style={{ top: 50, width: 200, display: open === i ? "block" : "none", visibility: "visible" }}>
-                  {m.items.map((it) => (
-                    <li key={it.to}>
-                      <Link to={it.to} onClick={() => setOpen(null)}>
-                        <i className="fa fa-chevron-right" aria-hidden="true" /> {it.label}
-                      </Link>
-                    </li>
-                  ))}
-                  <span />
-                </ul>
-              </li>
-            ))}
-            <li>
-              <a href="#" onClick={(e) => { e.preventDefault(); logout(); }}>
-                Logout <i className="fa fa-lock" aria-hidden="true" />
-              </a>
+    <div ref={viewportRef} className="lifeos-member-viewport neel-viewport">
+    <div className="lifeos-member neel" style={{ zoom: scale }}>
+      <header className="neel-header">
+        <Link to="/member" aria-label="Life OS member dashboard" className="neel-header-inner">
+          <img className="neel-mark" src="/member-kit/neel/logo-mark.png" alt="" />
+          <span className="neel-sep" />
+          <img className="neel-word" src="/member-kit/neel/logo-word.png" alt="Life OS" />
+          <span className="neel-sep" />
+          <span className="neel-cart" aria-hidden="true"><ShoppingCart size={86} strokeWidth={1.1} /></span>
+        </Link>
+      </header>
+      <nav className="neel-nav ddsmoothmenu" id="menu">
+        <ul>
+          {MENU.map((m, i) => (
+            <li key={m.label} onMouseEnter={() => setOpen(i)} onMouseLeave={() => setOpen(null)}>
+              <a href="#" onClick={(e) => { e.preventDefault(); setOpen(open === i ? null : i); }}>{m.label}</a>
+              <ul style={{ display: open === i ? "block" : "none" }}>
+                {m.items.map((it) => (
+                  <li key={it.to}><Link to={it.to} onClick={() => setOpen(null)}>{it.label}</Link></li>
+                ))}
+              </ul>
             </li>
-          </ul>
-          <br style={{ clear: "left" }} />
-        </div>
-      </div>
-      <div id="wrapper">
-        <div className="mid_image">
-          <div id="main_member">{ready && me.data ? children : <div className="main_bg about"><h2 id="heading">Loading…</h2></div>}</div>
-          {me.data && <div className="my-userid">My User ID: {(me.data as { life_id?: string }).life_id ?? ""}</div>}
-          <div className="print"><img src="/member-kit/images/printer.png" width={32} alt="Print" title="Print Inner Content" onClick={() => printInner()} /></div>
-        </div>
-      </div>
-      <div className="site_scroll_bottom">
-        <div className="site_scroll">
-          <div className="site_scroll_container">
-            <div className="lifeos-marquee">
-              <span>Welcome to Life OS member panel{me.data ? `, ${me.data.name}` : ""}.</span>
-              <span>Keep your profile and nominee information up to date.</span>
-            </div>
-          </div>
-        </div>
-      </div>
+          ))}
+          <li><a href="#" onClick={(e) => { e.preventDefault(); logout(); }}>Logout</a></li>
+        </ul>
+      </nav>
+      <main className="neel-main">
+        <div id="main_member">{ready && me.data ? children : <div className="main_bg about"><h2 id="heading">Loading…</h2></div>}</div>
+        <div className="print"><img src="/member-kit/images/printer.png" width={26} alt="Print" title="Print Inner Content" onClick={() => printInner()} /></div>
+        {me.data && <div className="my-userid">My User ID: {(me.data as { life_id?: string }).life_id ?? ""}</div>}
+      </main>
+      <footer className="neel-footer">CopyRights©{new Date().getFullYear()} By Life OS Limited</footer>
     </div>
     </div>
   );

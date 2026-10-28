@@ -16,6 +16,7 @@ export const Route = createFileRoute("/member")({
       { rel: "stylesheet", href: "/member-kit/style.css" },
       { rel: "stylesheet", href: "/member-kit/menu.css" },
       { rel: "stylesheet", href: "/member-kit/lifeos.css" },
+      { rel: "stylesheet", href: "/member-kit/neel.css" },
       { rel: "stylesheet", href: "https://use.fontawesome.com/b71919079b.css" },
     ],
   }),
